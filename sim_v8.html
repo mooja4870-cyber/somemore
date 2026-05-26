@@ -8,6 +8,8 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600;9..144,700&family=JetBrains+Mono:wght@400;500;600&family=Noto+Sans+KR:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/hammerjs@2.0.8/hammer.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom@2.0.1/dist/chartjs-plugin-zoom.min.js"></script>
 <style>
 :root {
   --bg: #0f1419;
@@ -565,6 +567,26 @@ body {
 }
 
 .chart-sub { font-size: 15px; color: var(--ink-faint); margin-bottom: 16px; }
+
+.reset-zoom-btn {
+  background: rgba(212, 168, 87, 0.12);
+  border: 1px solid rgba(212, 168, 87, 0.3);
+  color: var(--gold-bright);
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 13px;
+  cursor: pointer;
+  font-weight: 500;
+  font-family: 'Noto Sans KR', sans-serif;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+.reset-zoom-btn:hover {
+  background: rgba(212, 168, 87, 0.25);
+  border-color: var(--gold);
+}
 
 .detail-section {
   background: var(--bg-card);
@@ -2186,8 +2208,14 @@ async function renderResult() {
     </div>
     ${state.resultLevel >= 2 ? `
     <div class="chart-card">
-      <div class="chart-title">자산 추이 시뮬레이션</div>
-      <div class="chart-sub">${state.myAge}세 → ${data.years[data.years.length-1]}세까지 · <strong>명목가치 기준</strong> (안전선은 ${formatEok(state.safetyAmount)} 현재가치를 ${state.safetyAge}세 시점 명목 ${formatEok(safetyAmountNominal)}으로 환산한 값)</div>
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+        <div class="chart-title" style="margin-bottom: 0;">자산 추이 시뮬레이션</div>
+        <button id="resetZoomBtn" class="reset-zoom-btn" style="display: none;">🔍 확대 초기화</button>
+      </div>
+      <div class="chart-sub" style="margin-bottom: 16px;">${state.myAge}세 → ${data.years[data.years.length-1]}세까지 · <strong>명목가치 기준</strong> (안전선은 ${formatEok(state.safetyAmount)} 현재가치를 ${state.safetyAge}세 시점 명목 ${formatEok(safetyAmountNominal)}으로 환산한 값)</div>
+      <div style="font-size: 13px; color: var(--ink-faint); margin-bottom: 12px; display: flex; align-items: center; gap: 4px;">
+        <span>💡 두 손가락으로 차트를 확대/축소(Pinch Zoom)하거나 드래그하여 이동할 수 있습니다.</span>
+      </div>
       <div class="chart-wrap"><canvas id="resultChart"></canvas></div>
     </div>
     ` : ''}
@@ -2208,6 +2236,15 @@ async function renderResult() {
   main.appendChild(result);
   if (state.resultLevel >= 2) {
     drawResultChart(data);
+    const resetZoomBtn = document.getElementById('resetZoomBtn');
+    if (resetZoomBtn) {
+      resetZoomBtn.addEventListener('click', () => {
+        if (chartInstance) {
+          chartInstance.resetZoom();
+          resetZoomBtn.style.display = 'none';
+        }
+      });
+    }
   }
 
   // 입력 내용 보기 버튼
@@ -2486,6 +2523,31 @@ function drawResultChart(data) {
           callbacks: {
             title: (items) => `${items[0].label}세`,
             label: (item) => item.raw === null ? null : ` ${item.dataset.label}: ${formatEok(item.raw)}원`
+          }
+        },
+        zoom: {
+          pan: {
+            enabled: true,
+            mode: 'xy',
+            threshold: 10
+          },
+          zoom: {
+            wheel: {
+              enabled: true,
+              speed: 0.1
+            },
+            pinch: {
+              enabled: true
+            },
+            mode: 'xy',
+            onZoom: function() {
+              const resetBtn = document.getElementById('resetZoomBtn');
+              if (resetBtn) resetBtn.style.display = 'inline-flex';
+            },
+            onPan: function() {
+              const resetBtn = document.getElementById('resetZoomBtn');
+              if (resetBtn) resetBtn.style.display = 'inline-flex';
+            }
           }
         }
       },
