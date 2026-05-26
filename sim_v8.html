@@ -1,0 +1,2523 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>여보! 우리 생활비 좀 더 사용해도 된데 ~</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600;9..144,700&family=JetBrains+Mono:wght@400;500;600&family=Noto+Sans+KR:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+:root {
+  --bg: #0f1419;
+  --bg-card: #1a2028;
+  --bg-elevated: #232b36;
+  --bg-input: #2a3340;
+  --ink: #e8ecef;
+  --ink-dim: #c0c8d0;
+  --ink-faint: #8a96a3;
+  --gold: #d4a857;
+  --gold-bright: #f4c97a;
+  --gold-soft: rgba(212, 168, 87, 0.15);
+  --green: #6ec48f;
+  --red: #e07a7a;
+  --blue: #7aa8e0;
+  --border: #2a3340;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Noto Sans KR', sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+  line-height: 1.6;
+  min-height: 100vh;
+  font-size: 18px;
+  background-image:
+    radial-gradient(ellipse 80% 50% at 20% 0%, rgba(212, 168, 87, 0.05), transparent),
+    radial-gradient(ellipse 60% 40% at 80% 100%, rgba(122, 168, 224, 0.04), transparent);
+}
+
+.container {
+  max-width: 880px;
+  margin: 0 auto;
+  padding: 40px 24px 80px;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.eyebrow {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 15px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 18px;
+}
+
+.title {
+  font-family: 'Fraunces', serif;
+  font-weight: 400;
+  font-size: 44px;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  margin-bottom: 14px;
+}
+
+.title em {
+  font-style: italic;
+  color: var(--gold-bright);
+  font-weight: 300;
+}
+
+.subtitle {
+  color: var(--ink-dim);
+  font-size: 17px;
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+.trust-badge {
+  display: inline-flex;
+  align-items: flex-start;
+  gap: 8px;
+  background: rgba(212, 168, 87, 0.08);
+  border: 1px solid rgba(212, 168, 87, 0.25);
+  padding: 8px 18px;
+  border-radius: 30px;
+  font-size: 15px;
+  color: var(--ink-dim);
+  margin-top: 22px;
+  line-height: 1.4;
+  max-width: 100%;
+  text-align: left;
+}
+
+.trust-badge-icon {
+  color: var(--gold-bright);
+  font-size: 16px;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.progress {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin: 28px 0 36px;
+  align-items: center;
+}
+
+.progress-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--bg-elevated);
+  transition: all 0.4s ease;
+  border: 1px solid var(--border);
+}
+
+.progress-dot.active {
+  background: var(--gold);
+  width: 32px;
+  border-radius: 5px;
+  border-color: var(--gold);
+  box-shadow: 0 0 12px rgba(212, 168, 87, 0.4);
+}
+
+.progress-dot.done {
+  background: var(--green);
+  border-color: var(--green);
+}
+
+.progress-line {
+  width: 24px;
+  height: 1px;
+  background: var(--border);
+}
+
+.owl-message {
+  display: grid;
+  grid-template-columns: 64px 1fr;
+  gap: 18px;
+  margin-bottom: 22px;
+  align-items: flex-start;
+  animation: fadeInUp 0.5s ease;
+}
+
+.owl {
+  width: 64px;
+  height: 64px;
+  flex-shrink: 0;
+}
+
+.owl-svg {
+  width: 100%;
+  height: 100%;
+  filter: drop-shadow(0 2px 8px rgba(212, 168, 87, 0.25));
+}
+
+.owl-svg .eye-inner {
+  animation: blink 4s ease-in-out infinite;
+  transform-origin: center;
+}
+
+@keyframes blink {
+  0%, 90%, 100% { transform: scaleY(1); }
+  93%, 97% { transform: scaleY(0.1); }
+}
+
+.bubble {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 4px 18px 18px 18px;
+  padding: 20px 24px;
+  position: relative;
+  font-size: 17px;
+  line-height: 1.65;
+  color: var(--ink);
+  min-height: 60px;
+}
+
+.bubble::before {
+  content: '';
+  position: absolute;
+  left: -10px;
+  top: 14px;
+  width: 0; height: 0;
+  border-style: solid;
+  border-width: 0 12px 10px 0;
+  border-color: transparent var(--border) transparent transparent;
+}
+
+.bubble::after {
+  content: '';
+  position: absolute;
+  left: -8px;
+  top: 15px;
+  width: 0; height: 0;
+  border-style: solid;
+  border-width: 0 11px 9px 0;
+  border-color: transparent var(--bg-card) transparent transparent;
+}
+
+.bubble strong {
+  color: var(--gold-bright);
+  font-weight: 500;
+}
+
+.cursor {
+  display: inline-block;
+  width: 2px;
+  height: 1.1em;
+  background: var(--gold);
+  margin-left: 2px;
+  vertical-align: middle;
+  animation: blink-cursor 0.8s step-end infinite;
+}
+
+@keyframes blink-cursor {
+  50% { opacity: 0; }
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.input-group {
+  margin-bottom: 22px;
+  animation: fadeInUp 0.5s ease;
+}
+
+.input-label {
+  display: block;
+  font-size: 16px;
+  color: var(--ink-dim);
+  margin-bottom: 10px;
+  font-weight: 400;
+}
+
+.input-label strong {
+  color: var(--ink);
+  font-weight: 500;
+}
+
+.input-field {
+  width: 100%;
+  padding: 16px 20px;
+  background: var(--bg-input);
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  color: var(--ink);
+  font-size: 18px;
+  font-family: 'JetBrains Mono', monospace;
+  transition: all 0.2s;
+}
+
+.input-field:focus {
+  outline: none;
+  border-color: var(--gold);
+  background: var(--bg-elevated);
+  box-shadow: 0 0 0 4px rgba(212, 168, 87, 0.1);
+}
+
+.input-suffix-wrap { position: relative; }
+
+.input-suffix {
+  position: absolute;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--ink-faint);
+  font-size: 15px;
+  pointer-events: none;
+}
+
+.quick-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.chip {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  color: var(--ink-dim);
+  padding: 8px 14px;
+  border-radius: 20px;
+  font-size: 15px;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: inherit;
+}
+
+.chip:hover { border-color: var(--gold); color: var(--gold-bright); }
+.chip.selected {
+  background: var(--gold-soft);
+  border-color: var(--gold);
+  color: var(--gold-bright);
+}
+
+.radio-cards {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.radio-card {
+  background: var(--bg-elevated);
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  padding: 16px;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-align: center;
+  font-size: 15px;
+  color: var(--ink-dim);
+}
+
+.radio-card:hover { border-color: var(--gold); }
+.radio-card.selected {
+  background: var(--gold-soft);
+  border-color: var(--gold);
+  color: var(--gold-bright);
+}
+
+.radio-card-title { font-size: 16px; font-weight: 500; margin-bottom: 4px; }
+.radio-card-desc { font-size: 15px; color: var(--ink-faint); font-family: 'JetBrains Mono', monospace; }
+.radio-card.selected .radio-card-desc { color: var(--gold); }
+
+.btn-row {
+  display: flex;
+  gap: 12px;
+  margin-top: 32px;
+}
+
+.btn {
+  flex: 1;
+  padding: 18px 28px;
+  border-radius: 12px;
+  border: none;
+  font-family: inherit;
+  font-size: 17px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--gold), var(--gold-bright));
+  color: #0f1419;
+  font-weight: 600;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(212, 168, 87, 0.3);
+}
+
+.btn-secondary {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  color: var(--ink-dim);
+}
+
+.btn-secondary:hover {
+  border-color: var(--ink-faint);
+  color: var(--ink);
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--ink-faint);
+  font-size: 15px;
+  padding: 10px 18px;
+  border: 1px solid transparent;
+}
+
+.btn-ghost:hover {
+  color: var(--gold-bright);
+  border-color: var(--border);
+}
+
+.choice-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin-top: 24px;
+}
+
+.choice-btn {
+  background: var(--bg-card);
+  border: 2px solid var(--border);
+  border-radius: 14px;
+  padding: 24px;
+  cursor: pointer;
+  transition: all 0.25s;
+  text-align: center;
+  font-family: inherit;
+  color: var(--ink);
+}
+
+.choice-btn:hover {
+  border-color: var(--gold);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+}
+
+.choice-emoji { font-size: 32px; margin-bottom: 10px; display: block; }
+.choice-title { font-size: 17px; font-weight: 500; margin-bottom: 4px; }
+.choice-desc { font-size: 15px; color: var(--ink-faint); }
+
+.result-screen { animation: fadeInUp 0.6s ease; }
+
+.spouse-callout {
+  background: linear-gradient(135deg, rgba(212, 168, 87, 0.12), rgba(212, 168, 87, 0.02));
+  border: 1px solid rgba(212, 168, 87, 0.35);
+  border-radius: 16px;
+  padding: 28px 32px;
+  margin-bottom: 20px;
+  text-align: center;
+  position: relative;
+}
+.spouse-callout-eyebrow {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 15px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 14px;
+}
+.spouse-callout-headline {
+  font-family: 'Fraunces', serif;
+  font-size: 30px;
+  font-weight: 400;
+  line-height: 1.25;
+  color: var(--ink);
+  margin-bottom: 10px;
+}
+.spouse-callout-headline em {
+  font-style: italic;
+  color: var(--gold-bright);
+  font-weight: 300;
+}
+.spouse-callout-sub {
+  font-size: 15px;
+  color: var(--ink-dim);
+  max-width: 540px;
+  margin: 0 auto;
+}
+@media (max-width: 600px) {
+  .spouse-callout-headline { font-size: 24px; }
+}
+
+.verdict {
+  background: linear-gradient(135deg, rgba(110, 196, 143, 0.08), rgba(110, 196, 143, 0.02));
+  border: 1px solid rgba(110, 196, 143, 0.3);
+  border-radius: 16px;
+  padding: 32px;
+  margin-bottom: 28px;
+  text-align: center;
+}
+
+.verdict.warn {
+  background: linear-gradient(135deg, rgba(244, 201, 122, 0.08), rgba(244, 201, 122, 0.02));
+  border-color: rgba(244, 201, 122, 0.3);
+}
+
+.verdict.danger {
+  background: linear-gradient(135deg, rgba(224, 122, 122, 0.08), rgba(224, 122, 122, 0.02));
+  border-color: rgba(224, 122, 122, 0.3);
+}
+
+.verdict-icon {
+  font-family: 'Fraunces', serif;
+  font-size: 56px;
+  font-weight: 300;
+  color: var(--green);
+  line-height: 1;
+  margin-bottom: 16px;
+}
+
+.verdict.warn .verdict-icon { color: var(--gold-bright); }
+.verdict.danger .verdict-icon { color: var(--red); }
+
+.verdict-headline {
+  font-family: 'Fraunces', serif;
+  font-size: 26px;
+  font-weight: 500;
+  line-height: 1.3;
+  margin-bottom: 10px;
+}
+
+.verdict-detail {
+  font-size: 16px;
+  color: var(--ink-dim);
+  max-width: 580px;
+  margin: 0 auto;
+}
+
+.metric-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-bottom: 28px;
+}
+
+.metric {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 22px 20px;
+  text-align: center;
+}
+
+.metric-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 15px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+  margin-bottom: 10px;
+}
+
+.metric-value {
+  font-family: 'Fraunces', serif;
+  font-size: 30px;
+  font-weight: 500;
+  line-height: 1;
+}
+
+.metric-value.positive { color: var(--green); }
+.metric-value.negative { color: var(--red); }
+.metric-value.gold { color: var(--gold-bright); }
+
+.metric-sub {
+  font-size: 15px;
+  color: var(--ink-faint);
+  margin-top: 8px;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.chart-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 28px;
+  margin-bottom: 24px;
+}
+
+.chart-wrap { position: relative; height: 320px; }
+
+.chart-title {
+  font-family: 'Fraunces', serif;
+  font-size: 20px;
+  font-weight: 500;
+  margin-bottom: 4px;
+}
+
+.chart-sub { font-size: 15px; color: var(--ink-faint); margin-bottom: 16px; }
+
+.detail-section {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 28px;
+  margin-bottom: 20px;
+  animation: fadeInUp 0.5s ease;
+}
+
+.detail-section h3 {
+  font-family: 'Fraunces', serif;
+  font-size: 20px;
+  font-weight: 500;
+  margin-bottom: 16px;
+}
+
+.detail-section .helper {
+  font-size: 15px;
+  color: var(--ink-faint);
+  margin-bottom: 20px;
+}
+
+.prop-card {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 20px;
+  margin-bottom: 14px;
+}
+
+.prop-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.prop-card-title { font-size: 16px; font-weight: 500; }
+
+.prop-card-remove {
+  background: transparent;
+  border: none;
+  color: var(--ink-faint);
+  cursor: pointer;
+  font-size: 15px;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-family: inherit;
+}
+
+.prop-card-remove:hover {
+  color: var(--red);
+  background: rgba(224, 122, 122, 0.1);
+}
+
+.prop-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.prop-grid .input-group { margin-bottom: 0; }
+.prop-grid .input-label { font-size: 15px; margin-bottom: 6px; }
+.prop-grid .input-field { padding: 12px 14px; font-size: 16px; }
+
+.add-item-btn {
+  width: 100%;
+  background: transparent;
+  border: 1.5px dashed var(--border);
+  color: var(--ink-faint);
+  padding: 14px;
+  border-radius: 10px;
+  font-family: inherit;
+  font-size: 15px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.add-item-btn:hover {
+  border-color: var(--gold);
+  color: var(--gold-bright);
+  background: rgba(212, 168, 87, 0.04);
+}
+
+.note-box {
+  background: rgba(122, 168, 224, 0.06);
+  border-left: 3px solid var(--blue);
+  border-radius: 4px;
+  padding: 14px 18px;
+  margin-bottom: 20px;
+  font-size: 15px;
+  color: var(--ink-dim);
+  animation: fadeInUp 0.5s ease;
+}
+
+.note-box strong { color: var(--blue); }
+
+.footer-actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 32px;
+  padding-top: 24px;
+  border-top: 1px solid var(--border);
+  align-items: center;
+}
+
+.disclaimer {
+  font-size: 15px;
+  color: var(--ink-faint);
+  margin-top: 32px;
+  padding: 18px 22px;
+  border: 1px dashed var(--border);
+  border-radius: 8px;
+  line-height: 1.7;
+}
+
+@media (max-width: 700px) {
+  .prop-grid { grid-template-columns: 1fr; }
+  .metric-grid { grid-template-columns: 1fr 1fr; }
+  .radio-cards { grid-template-columns: 1fr 1fr; }
+  .choice-row { grid-template-columns: 1fr; }
+  .title { font-size: 32px; }
+  .container { padding: 28px 16px 60px; }
+}
+
+.save-indicator {
+  position: fixed;
+  top: 18px;
+  right: 18px;
+  background: rgba(110, 196, 143, 0.15);
+  border: 1px solid rgba(110, 196, 143, 0.4);
+  color: var(--green);
+  padding: 8px 14px;
+  border-radius: 20px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 15px;
+  letter-spacing: 0.08em;
+  opacity: 0;
+  transform: translateY(-8px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  pointer-events: none;
+  z-index: 1000;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+.save-indicator.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.resume-banner {
+  background: linear-gradient(135deg, rgba(212, 168, 87, 0.12), rgba(212, 168, 87, 0.02));
+  border: 1px solid rgba(212, 168, 87, 0.4);
+  border-radius: 14px;
+  padding: 22px 26px;
+  margin-bottom: 24px;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 20px;
+  align-items: center;
+  animation: fadeInUp 0.5s ease;
+}
+.resume-banner-text { font-size: 15px; color: var(--ink); line-height: 1.55; }
+.resume-banner-text strong { color: var(--gold-bright); }
+.resume-banner-meta { font-size: 15px; color: var(--ink-faint); margin-top: 4px; font-family: 'JetBrains Mono', monospace; }
+.resume-banner-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+.resume-banner-actions button {
+  background: var(--gold-soft);
+  border: 1px solid var(--gold);
+  color: var(--gold-bright);
+  padding: 10px 18px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: 500;
+  font-family: inherit;
+  transition: all 0.2s;
+}
+.resume-banner-actions button:hover { background: var(--gold); color: var(--bg); }
+.resume-banner-actions button.secondary {
+  background: transparent;
+  border-color: var(--border);
+  color: var(--ink-dim);
+}
+.resume-banner-actions button.secondary:hover { border-color: var(--ink-dim); color: var(--ink); }
+@media (max-width: 600px) {
+  .resume-banner { grid-template-columns: 1fr; }
+}
+
+/* ===== Input Review Modal ===== */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+  padding: 20px;
+}
+.modal-overlay.visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+.modal-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  max-width: 720px;
+  width: 100%;
+  max-height: 88vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+  transform: translateY(20px) scale(0.98);
+  transition: transform 0.25s ease;
+}
+.modal-overlay.visible .modal-card { transform: translateY(0) scale(1); }
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 24px 28px;
+  border-bottom: 1px solid var(--border);
+}
+.modal-title {
+  font-family: 'Fraunces', serif;
+  font-size: 22px;
+  font-weight: 500;
+  color: var(--ink);
+}
+.modal-title-sub {
+  font-size: 15px;
+  color: var(--ink-faint);
+  font-family: 'JetBrains Mono', monospace;
+  margin-top: 4px;
+  letter-spacing: 0.08em;
+}
+.modal-close {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  color: var(--ink-dim);
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  font-size: 20px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  font-family: inherit;
+}
+.modal-close:hover {
+  background: var(--bg-input);
+  color: var(--ink);
+  transform: rotate(90deg);
+}
+.modal-body {
+  padding: 24px 28px;
+  overflow-y: auto;
+  flex: 1;
+}
+.modal-footer {
+  padding: 18px 28px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+}
+
+/* Review content cards */
+.rev-section { margin-bottom: 28px; }
+.rev-section:last-child { margin-bottom: 0; }
+.rev-section-title {
+  font-family: 'Fraunces', serif;
+  font-size: 18px;
+  font-weight: 500;
+  margin-bottom: 14px;
+  color: var(--gold-bright);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.rev-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+.rev-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 12px 14px;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  gap: 12px;
+}
+.rev-row-label {
+  font-size: 15px;
+  color: var(--ink-dim);
+  flex-shrink: 0;
+}
+.rev-row-value {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 16px;
+  color: var(--ink);
+  font-weight: 500;
+  text-align: right;
+}
+.rev-row-value.gold { color: var(--gold-bright); }
+.rev-row-value.green { color: var(--green); }
+.rev-row-value.red { color: var(--red); }
+.rev-row-value.dim { color: var(--ink-faint); font-weight: 400; }
+
+.rev-prop-card, .rev-event-card {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 16px;
+  margin-bottom: 10px;
+}
+.rev-prop-card-title, .rev-event-card-title {
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--gold-bright);
+  margin-bottom: 10px;
+}
+.rev-prop-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px 14px;
+  font-size: 15px;
+}
+.rev-prop-grid > div {
+  display: flex;
+  justify-content: space-between;
+  color: var(--ink-dim);
+}
+.rev-prop-grid > div span:last-child {
+  color: var(--ink);
+  font-family: 'JetBrains Mono', monospace;
+}
+.rev-empty {
+  color: var(--ink-faint);
+  font-style: italic;
+  text-align: center;
+  padding: 20px;
+}
+
+/* View input button on result */
+.view-input-btn {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  color: var(--ink);
+  padding: 12px 22px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 500;
+  font-family: inherit;
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.view-input-btn:hover {
+  border-color: var(--gold);
+  color: var(--gold-bright);
+  background: var(--gold-soft);
+}
+
+@media (max-width: 600px) {
+  .rev-grid { grid-template-columns: 1fr; }
+  .rev-prop-grid { grid-template-columns: 1fr; }
+  .modal-header { padding: 18px 20px; }
+  .modal-body { padding: 18px 20px; }
+  .modal-footer { padding: 14px 20px; }
+}
+</style>
+</head>
+<body>
+<div class="save-indicator" id="saveIndicator">💾 저장됨</div>
+<div class="modal-overlay" id="inputReviewModal" aria-hidden="true">
+  <div class="modal-card" role="dialog" aria-labelledby="modalTitle">
+    <div class="modal-header">
+      <div>
+        <div class="modal-title" id="modalTitle">📝 입력 내용</div>
+        <div class="modal-title-sub" id="modalSub">— 단계</div>
+      </div>
+      <button class="modal-close" id="modalCloseBtn" aria-label="닫기">×</button>
+    </div>
+    <div class="modal-body" id="modalBody"></div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" id="modalEditBtn">✏️ 입력 수정하러 가기</button>
+      <button class="btn btn-primary" id="modalCloseBtn2">닫기</button>
+    </div>
+  </div>
+</div>
+<div class="container">
+
+  <header class="header">
+    <div class="eyebrow">A Retirement Cashflow Studio · For Seniors</div>
+    <h1 class="title">여보! 우리 생활비 좀 <em>더</em> 사용해도 된데 ~</h1>
+    <p class="subtitle">30초만에 시작하는 노후 자산 시뮬레이션. 부담 없이 들어와 보세요.</p>
+    <div class="trust-badge">
+      <span class="trust-badge-icon">✓</span> 본 시뮬레이션은 한국은행 물가목표, 국민연금법, 통계청 생명표 등 공인된 국가 표준 데이터를 기반으로 계산됩니다.
+    </div>
+  </header>
+
+  <div class="progress" id="progress">
+    <div class="progress-dot active" data-step="1"></div>
+    <div class="progress-line"></div>
+    <div class="progress-dot" data-step="2"></div>
+    <div class="progress-line"></div>
+    <div class="progress-dot" data-step="3"></div>
+    <div class="progress-line"></div>
+    <div class="progress-dot" data-step="result"></div>
+  </div>
+
+  <main id="main"></main>
+</div>
+
+<template id="owlSvg">
+<svg class="owl-svg" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+  <ellipse cx="32" cy="38" rx="22" ry="22" fill="#d4a857" opacity="0.9"/>
+  <ellipse cx="32" cy="42" rx="14" ry="16" fill="#f4c97a" opacity="0.5"/>
+  <path d="M 14 22 L 18 12 L 24 18 Z" fill="#b8902f"/>
+  <path d="M 50 22 L 46 12 L 40 18 Z" fill="#b8902f"/>
+  <circle cx="24" cy="28" r="9" fill="#1a2028"/>
+  <circle cx="40" cy="28" r="9" fill="#1a2028"/>
+  <circle class="eye-inner" cx="25" cy="28" r="4" fill="#f4c97a"/>
+  <circle class="eye-inner" cx="41" cy="28" r="4" fill="#f4c97a"/>
+  <circle cx="26" cy="27" r="1.5" fill="#1a2028"/>
+  <circle cx="42" cy="27" r="1.5" fill="#1a2028"/>
+  <path d="M 32 32 L 28 38 L 36 38 Z" fill="#b8902f"/>
+  <path d="M 12 38 Q 14 48 22 50" fill="none" stroke="#b8902f" stroke-width="2" stroke-linecap="round"/>
+  <path d="M 52 38 Q 50 48 42 50" fill="none" stroke="#b8902f" stroke-width="2" stroke-linecap="round"/>
+</svg>
+</template>
+
+<script>
+const STORAGE_KEY = 'retirement_sim_state_v1';
+const STORAGE_VERSION = 1; // state 스키마 바뀌면 올리기
+
+const DEFAULT_STATE = {
+  level: 1, resultLevel: 0,
+  myAge: null, spouseAge: null, totalAsset: null, totalDebt: null,
+  monthlyIncome: null, monthlyExpense: null,
+  safetyAge: 95, safetyAmount: 50000, inflation: 2.5,
+  asset_realEstate: null, asset_cash: null, asset_stock: null,
+  asset_crypto: null, asset_etc: null, debt_total: null,
+  incomes: [], expenses: [],
+  properties: [], events: [],
+  cashReturn: 3.0, reGrowth: 1.5, medicalGrowth: true,
+};
+
+const state = { ...DEFAULT_STATE };
+
+// ============ PERSISTENT STORAGE ============
+let saveTimer = null;
+function saveState() {
+  try {
+    const payload = { version: STORAGE_VERSION, savedAt: new Date().toISOString(), state };
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
+    showSaveIndicator();
+  } catch (e) {
+    // localStorage 사용 불가 환경 (Claude.ai 미리보기 등) — 조용히 패스
+    console.warn('localStorage 저장 실패:', e.message);
+  }
+}
+function saveStateDebounced() {
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(saveState, 400);
+}
+function loadState() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return null;
+    const payload = JSON.parse(raw);
+    if (payload.version !== STORAGE_VERSION) {
+      // 스키마 미스매치 시 무시
+      localStorage.removeItem(STORAGE_KEY);
+      return null;
+    }
+    return payload;
+  } catch (e) {
+    return null;
+  }
+}
+function clearStoredState() {
+  try { localStorage.removeItem(STORAGE_KEY); } catch (e) {}
+}
+function showSaveIndicator() {
+  const ind = document.getElementById('saveIndicator');
+  if (!ind) return;
+  ind.classList.add('visible');
+  clearTimeout(ind._t);
+  ind._t = setTimeout(() => ind.classList.remove('visible'), 1500);
+}
+function isStateMeaningful(s) {
+  // 의미있는 데이터가 들어있는지 (단순 디폴트만 있으면 false)
+  return !!(s.myAge || s.totalAsset || (s.incomes && s.incomes.length) || (s.properties && s.properties.length));
+}
+
+// ============ OWL TYPING ============
+function createOwlMessage() {
+  const tmpl = document.getElementById('owlSvg');
+  const clone = tmpl.content.cloneNode(true);
+  const wrap = document.createElement('div');
+  wrap.className = 'owl-message';
+  const owlDiv = document.createElement('div');
+  owlDiv.className = 'owl';
+  owlDiv.appendChild(clone);
+  const bubble = document.createElement('div');
+  bubble.className = 'bubble';
+  const textSpan = document.createElement('span');
+  const cursor = document.createElement('span');
+  cursor.className = 'cursor';
+  bubble.appendChild(textSpan);
+  bubble.appendChild(cursor);
+  wrap.appendChild(owlDiv);
+  wrap.appendChild(bubble);
+  return { wrap, textSpan, cursor };
+}
+
+function typeText(targetEl, fullHTML, speed, onDone) {
+  let i = 0;
+  const plain = fullHTML.replace(/<[^>]+>/g, '');
+  speed = speed || 22;
+  function tick() {
+    if (i >= plain.length) {
+      targetEl.innerHTML = fullHTML;
+      if (onDone) onDone();
+      return;
+    }
+    targetEl.textContent = plain.substring(0, i + 1);
+    i++;
+    setTimeout(tick, speed);
+  }
+  tick();
+}
+
+async function showMessages(messages, container) {
+  for (const msg of messages) {
+    const { wrap, textSpan, cursor } = createOwlMessage();
+    container.appendChild(wrap);
+    await new Promise(resolve => {
+      typeText(textSpan, msg, 22, () => {
+        cursor.style.display = 'none';
+        resolve();
+      });
+    });
+    await new Promise(r => setTimeout(r, 250));
+  }
+}
+
+function updateProgress(currentStep) {
+  const dots = document.querySelectorAll('.progress-dot');
+  dots.forEach(dot => {
+    const step = dot.dataset.step;
+    dot.classList.remove('active', 'done');
+    if (step === String(currentStep)) {
+      dot.classList.add('active');
+    } else if (currentStep === 'result' && (step === '1' || step === '2' || step === '3')) {
+      if (parseInt(step) <= state.resultLevel) dot.classList.add('done');
+    } else if (currentStep !== 'result' && step !== 'result' && parseInt(step) < parseInt(currentStep)) {
+      dot.classList.add('done');
+    }
+  });
+}
+
+function formatEok(manwon) {
+  if (manwon === null || isNaN(manwon)) return '—';
+  const eok = manwon / 10000;
+  if (Math.abs(eok) >= 1) return eok.toFixed(1) + '억';
+  if (Math.abs(manwon) >= 1) return Math.round(manwon) + '만';
+  return '0';
+}
+
+function num(v) {
+  const n = parseFloat(v);
+  return isNaN(n) ? 0 : n;
+}
+
+function clearMain() {
+  document.getElementById('main').innerHTML = '';
+}
+
+// ============ LEVEL 1 ============
+async function renderLevel1() {
+  state.level = 1;
+  updateProgress(1);
+  clearMain();
+  const main = document.getElementById('main');
+
+  await showMessages([
+    '안녕하세요! 저는 <strong>부엉이</strong>예요. 🦉',
+    '우리가 은퇴 후 <strong>생활비를 매달 얼마까지 더 써도 안전할지</strong> 30초만에 함께 계산해 봐요. 어렵지 않으니 천천히 답해주세요.'
+  ], main);
+
+  const form = document.createElement('div');
+  form.style.animation = 'fadeInUp 0.5s ease';
+  form.innerHTML = `
+    <div class="input-group">
+      <label class="input-label"><strong>본인 나이</strong>는 어떻게 되세요?</label>
+      <div class="input-suffix-wrap">
+        <input type="number" class="input-field" id="myAge" placeholder="예: 63" value="${state.myAge ?? ''}">
+        <span class="input-suffix">세</span>
+      </div>
+    </div>
+    <div class="input-group">
+      <label class="input-label"><strong>배우자분 나이</strong>는요? <span style="color: var(--ink-faint); font-size: 15px;">(없으시면 비워두세요)</span></label>
+      <div class="input-suffix-wrap">
+        <input type="number" class="input-field" id="spouseAge" placeholder="예: 60" value="${state.spouseAge ?? ''}">
+        <span class="input-suffix">세</span>
+      </div>
+    </div>
+    <div class="input-group">
+      <label class="input-label">대략적인 <strong>총자산</strong>은 얼마쯤? <span style="color: var(--ink-faint); font-size: 15px;">(부동산+현금+주식 모두)</span></label>
+      <div class="input-suffix-wrap">
+        <input type="number" class="input-field" id="totalAsset" placeholder="예: 200000" value="${state.totalAsset ?? ''}">
+        <span class="input-suffix">만원</span>
+      </div>
+      <div class="quick-chips">
+        <button type="button" class="chip" data-target="totalAsset" data-value="30000">3억</button>
+        <button type="button" class="chip" data-target="totalAsset" data-value="50000">5억</button>
+        <button type="button" class="chip" data-target="totalAsset" data-value="100000">10억</button>
+        <button type="button" class="chip" data-target="totalAsset" data-value="200000">20억</button>
+        <button type="button" class="chip" data-target="totalAsset" data-value="300000">30억</button>
+        <button type="button" class="chip" data-target="totalAsset" data-value="500000">50억</button>
+      </div>
+    </div>
+    <div class="input-group">
+      <label class="input-label">혹시 <strong>대출, 빚, 또는 돌려줘야 할 전세보증금</strong>이 있으세요? <span style="color: var(--ink-faint); font-size: 15px;">(없으시면 비워두세요 · 선택)</span></label>
+      <div class="input-suffix-wrap">
+        <input type="number" class="input-field" id="totalDebt" placeholder="없으면 비워두기" value="${state.totalDebt ?? ''}">
+        <span class="input-suffix">만원</span>
+      </div>
+      <div class="quick-chips">
+        <button type="button" class="chip" data-target="totalDebt" data-value="0">없음</button>
+        <button type="button" class="chip" data-target="totalDebt" data-value="10000">1억</button>
+        <button type="button" class="chip" data-target="totalDebt" data-value="30000">3억</button>
+        <button type="button" class="chip" data-target="totalDebt" data-value="50000">5억</button>
+        <button type="button" class="chip" data-target="totalDebt" data-value="100000">10억</button>
+      </div>
+    </div>
+    <div class="input-group">
+      <label class="input-label">매달 들어오는 <strong>총소득</strong>은? <span style="color: var(--ink-faint); font-size: 15px;">(연금+임대+근로 등 모두)</span></label>
+      <div class="input-suffix-wrap">
+        <input type="number" class="input-field" id="monthlyIncome" placeholder="예: 400" value="${state.monthlyIncome ?? ''}">
+        <span class="input-suffix">만원/월</span>
+      </div>
+      <div class="quick-chips">
+        <button type="button" class="chip" data-target="monthlyIncome" data-value="100">100만</button>
+        <button type="button" class="chip" data-target="monthlyIncome" data-value="200">200만</button>
+        <button type="button" class="chip" data-target="monthlyIncome" data-value="300">300만</button>
+        <button type="button" class="chip" data-target="monthlyIncome" data-value="500">500만</button>
+        <button type="button" class="chip" data-target="monthlyIncome" data-value="800">800만</button>
+      </div>
+    </div>
+    <div class="input-group">
+      <label class="input-label">매달 <strong>지출</strong>은? <span style="color: var(--ink-faint); font-size: 15px;">(생활비+공과금+대출이자 등)</span></label>
+      <div class="input-suffix-wrap">
+        <input type="number" class="input-field" id="monthlyExpense" placeholder="예: 400" value="${state.monthlyExpense ?? ''}">
+        <span class="input-suffix">만원/월</span>
+      </div>
+      <div class="quick-chips">
+        <button type="button" class="chip" data-target="monthlyExpense" data-value="200">200만</button>
+        <button type="button" class="chip" data-target="monthlyExpense" data-value="300">300만</button>
+        <button type="button" class="chip" data-target="monthlyExpense" data-value="500">500만</button>
+        <button type="button" class="chip" data-target="monthlyExpense" data-value="700">700만</button>
+        <button type="button" class="chip" data-target="monthlyExpense" data-value="1000">1000만</button>
+      </div>
+    </div>
+    <div class="input-group">
+      <label class="input-label"><strong>안전 기준</strong>: 어느 나이까지 자산이 <strong>얼마 정도</strong> 남아있길 바라세요?</label>
+      <div style="font-size: 15px; color: var(--ink-faint); margin-bottom: 12px;">노후 마지막까지 가지고 있고 싶은 최소 금액을 정해주세요. 와이프(혹은 본인)의 마음이 편해지는 숫자가 좋은 기준이에요.</div>
+      <div style="font-size: 15px; color: var(--ink-dim); margin-bottom: 8px; font-weight: 500;">① 어느 나이까지?</div>
+      <div class="radio-cards">
+        <div class="radio-card" data-target="safetyAge" data-value="90">
+          <div class="radio-card-title">90세까지</div>
+          <div class="radio-card-desc">현실적</div>
+        </div>
+        <div class="radio-card selected" data-target="safetyAge" data-value="95">
+          <div class="radio-card-title">95세까지</div>
+          <div class="radio-card-desc">보수적 ★</div>
+        </div>
+        <div class="radio-card" data-target="safetyAge" data-value="100">
+          <div class="radio-card-title">100세까지</div>
+          <div class="radio-card-desc">매우 보수적</div>
+        </div>
+        <div class="radio-card" data-target="safetyAge" data-value="105">
+          <div class="radio-card-title">105세까지</div>
+          <div class="radio-card-desc">최보수</div>
+        </div>
+      </div>
+      <div style="font-size: 15px; color: var(--ink-dim); margin: 18px 0 8px; font-weight: 500;">② 그 나이에 얼마 <span style="color: var(--gold); font-size: 14px;">(미래 예측 곤란하므로 지금의 자산가치 기준)</span> 정도 남기고 싶으세요?</div>
+      <div style="font-size: 15px; color: var(--ink-faint); margin-bottom: 10px; line-height: 1.5;">💡 30년 후 가치는 인플레로 가늠하기 어렵죠. 지금 5억의 구매력으로 환산해서 안심되는 금액을 적어주세요. 시뮬은 이를 자동으로 미래 가치로 환산해 비교합니다.</div>
+      <div class="input-suffix-wrap">
+        <input type="number" class="input-field" id="safetyAmount" placeholder="예: 50000 (5억)" value="${state.safetyAmount ?? ''}">
+        <span class="input-suffix">만원</span>
+      </div>
+      <div class="quick-chips">
+        <button type="button" class="chip" data-target="safetyAmount" data-value="0">0 (소진 직전)</button>
+        <button type="button" class="chip" data-target="safetyAmount" data-value="10000">1억</button>
+        <button type="button" class="chip" data-target="safetyAmount" data-value="30000">3억</button>
+        <button type="button" class="chip" data-target="safetyAmount" data-value="50000">5억 ★</button>
+        <button type="button" class="chip" data-target="safetyAmount" data-value="100000">10억</button>
+        <button type="button" class="chip" data-target="safetyAmount" data-value="200000">20억</button>
+      </div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-primary" id="goResult1">결과 보기 ✨</button>
+    </div>
+  `;
+  main.appendChild(form);
+
+  form.querySelectorAll('.chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      const target = chip.dataset.target;
+      document.getElementById(target).value = chip.dataset.value;
+      form.querySelectorAll(`.chip[data-target="${target}"]`).forEach(c => c.classList.remove('selected'));
+      chip.classList.add('selected');
+    });
+  });
+
+  // 사용자가 입력란을 직접 수정하면 해당 target의 chip selected 해제
+  ['totalAsset', 'totalDebt', 'monthlyIncome', 'monthlyExpense', 'safetyAmount'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.addEventListener('input', () => {
+      form.querySelectorAll(`.chip[data-target="${id}"]`).forEach(c => c.classList.remove('selected'));
+    });
+  });
+
+  form.querySelectorAll('.radio-card').forEach(card => {
+    card.addEventListener('click', () => {
+      const target = card.dataset.target;
+      form.querySelectorAll(`.radio-card[data-target="${target}"]`).forEach(c => c.classList.remove('selected'));
+      card.classList.add('selected');
+      state[target] = parseInt(card.dataset.value);
+    });
+  });
+
+  document.getElementById('goResult1').addEventListener('click', () => {
+    state.myAge = num(document.getElementById('myAge').value);
+    state.spouseAge = num(document.getElementById('spouseAge').value) || null;
+    state.totalAsset = num(document.getElementById('totalAsset').value);
+    const debtEl = document.getElementById('totalDebt');
+    state.totalDebt = debtEl.value === '' ? 0 : num(debtEl.value);
+    state.monthlyIncome = num(document.getElementById('monthlyIncome').value);
+    state.monthlyExpense = num(document.getElementById('monthlyExpense').value);
+    const safetyAmountEl = document.getElementById('safetyAmount');
+    if (safetyAmountEl && safetyAmountEl.value !== '') {
+      state.safetyAmount = num(safetyAmountEl.value);
+    }
+
+    if (!state.myAge || !state.totalAsset) {
+      alert('나이와 총자산은 꼭 입력해주세요!');
+      return;
+    }
+    state.resultLevel = 1;
+    saveState();
+    renderResult();
+  });
+}
+
+// ============ LEVEL 2 ============
+async function renderLevel2() {
+  state.level = 2;
+  updateProgress(2);
+  clearMain();
+  const main = document.getElementById('main');
+
+  // 1단계에서 입력한 totalDebt를 2단계 debt_total로 자동 이전 (아직 비어있을 때만)
+  if ((state.debt_total === null || state.debt_total === undefined) && state.totalDebt > 0) {
+    state.debt_total = state.totalDebt;
+  }
+
+  await showMessages([
+    '좋아요! 이제 조금 더 자세히 볼게요. ☕',
+    '자산을 종류별로 나눠주시면 더 정확해져요. 그리고 매달 들어오는 소득이 <strong>임대료인지 연금인지</strong>도 구분해주시면 미래 예측이 정밀해집니다.'
+  ], main);
+
+  const note = document.createElement('div');
+  note.className = 'note-box';
+  note.innerHTML = `<strong>1단계 정보</strong>: 총자산 ${formatEok(state.totalAsset)}${state.totalDebt > 0 ? `, 대출/빚 ${formatEok(state.totalDebt)}` : ''}, 월수입 ${state.monthlyIncome||0}만, 월지출 ${state.monthlyExpense||0}만. 아래에서 더 세분화해서 알려주세요.`;
+  main.appendChild(note);
+
+  const assetSection = document.createElement('div');
+  assetSection.className = 'detail-section';
+  assetSection.innerHTML = `
+    <h3>💼 자산을 종류별로 나눠주세요</h3>
+    <div class="helper">합계가 1단계 ${formatEok(state.totalAsset)}과 비슷하면 OK예요. 정확하지 않아도 괜찮아요.</div>
+    ${assetInput('asset_realEstate', '부동산 평가액 합계', '150000', state.asset_realEstate)}
+    ${assetInput('asset_cash', '현금/예금', '20000', state.asset_cash)}
+    ${assetInput('asset_stock', '주식/펀드', '10000', state.asset_stock)}
+    ${assetInput('asset_crypto', '가상자산 (비트코인 등)', '10000', state.asset_crypto)}
+    ${assetInput('asset_etc', '기타 (금, 보석 등)', '7000', state.asset_etc)}
+    ${assetInput('debt_total', '총 부채 (대출+전세보증금 등)', '80000', state.debt_total)}
+  `;
+  main.appendChild(assetSection);
+
+  const incomeSection = document.createElement('div');
+  incomeSection.className = 'detail-section';
+  incomeSection.innerHTML = `
+    <h3>💰 월 소득을 항목별로</h3>
+    <div class="helper">각 소득이 <strong>물가에 따라 오르는지</strong>도 체크해주세요 (국민연금은 ✓, 고정 임대료는 ✗).</div>
+    <div id="incomeList"></div>
+    <button class="add-item-btn" id="addIncomeBtn">+ 소득 항목 추가</button>
+  `;
+  main.appendChild(incomeSection);
+
+  const expenseSection = document.createElement('div');
+  expenseSection.className = 'detail-section';
+  expenseSection.innerHTML = `
+    <h3>🛒 월 지출도 나눠주세요</h3>
+    <div class="helper">생활비, 대출이자, 의료비 등으로 구분하면 미래 변화를 더 정확히 예측해요.</div>
+    <div id="expenseList"></div>
+    <button class="add-item-btn" id="addExpenseBtn">+ 지출 항목 추가</button>
+  `;
+  main.appendChild(expenseSection);
+
+  const settingsSection = document.createElement('div');
+  settingsSection.className = 'detail-section';
+  settingsSection.innerHTML = `
+    <h3>📈 시뮬레이션 설정</h3>
+    <div class="input-group">
+      <label class="input-label"><strong>물가상승률</strong> 가정 (연간)</label>
+      <div class="radio-cards">
+        ${[2.0, 2.5, 3.0, 3.5].map(v => `
+          <div class="radio-card ${state.inflation === v ? 'selected' : ''}" data-target="inflation" data-value="${v}">
+            <div class="radio-card-title">${v.toFixed(1)}%</div>
+            <div class="radio-card-desc">${v === 2.0 ? '한은 목표' : v === 2.5 ? '보수적 ★' : v === 3.0 ? '체감 물가' : '매우 보수'}</div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  `;
+  main.appendChild(settingsSection);
+
+  const actions = document.createElement('div');
+  actions.className = 'btn-row';
+  actions.innerHTML = `
+    <button class="btn btn-secondary" id="backTo1">← 1단계로</button>
+    <button class="btn btn-primary" id="goResult2">결과 다시 보기 ✨</button>
+  `;
+  main.appendChild(actions);
+
+  renderIncomeList();
+  renderExpenseList();
+
+  settingsSection.querySelectorAll('.radio-card').forEach(card => {
+    card.addEventListener('click', () => {
+      const target = card.dataset.target;
+      settingsSection.querySelectorAll(`.radio-card[data-target="${target}"]`).forEach(c => c.classList.remove('selected'));
+      card.classList.add('selected');
+      state[target] = parseFloat(card.dataset.value);
+    });
+  });
+
+  document.getElementById('addIncomeBtn').addEventListener('click', () => {
+    state.incomes.push({ name: '', amount: 0, growsWithInflation: false });
+    renderIncomeList();
+    saveStateDebounced();
+  });
+
+  document.getElementById('addExpenseBtn').addEventListener('click', () => {
+    state.expenses.push({ name: '', amount: 0, growsWithInflation: true });
+    renderExpenseList();
+    saveStateDebounced();
+  });
+
+  document.getElementById('backTo1').addEventListener('click', () => renderLevel1());
+  document.getElementById('goResult2').addEventListener('click', () => {
+    saveLevel2Inputs();
+    state.resultLevel = 2;
+    saveState();
+    renderResult();
+  });
+}
+
+function assetInput(id, label, placeholder, val) {
+  return `
+    <div class="input-group">
+      <label class="input-label"><strong>${label}</strong></label>
+      <div class="input-suffix-wrap">
+        <input type="number" class="input-field" id="${id}" placeholder="예: ${placeholder}" value="${val ?? ''}">
+        <span class="input-suffix">만원</span>
+      </div>
+    </div>
+  `;
+}
+
+function renderIncomeList() {
+  const list = document.getElementById('incomeList');
+  list.innerHTML = '';
+  if (state.incomes.length === 0) {
+    state.incomes = [
+      { name: '국민연금', amount: 0, growsWithInflation: true },
+      { name: '임대료', amount: 0, growsWithInflation: false },
+    ];
+  }
+  state.incomes.forEach((inc, idx) => {
+    const row = document.createElement('div');
+    row.className = 'prop-card';
+    row.innerHTML = `
+      <div class="prop-grid">
+        <div class="input-group">
+          <label class="input-label">소득 이름</label>
+          <input type="text" class="input-field" placeholder="예: 국민연금" value="${inc.name}" data-idx="${idx}" data-key="name" data-list="income">
+        </div>
+        <div class="input-group">
+          <label class="input-label">월 금액 (만원)</label>
+          <input type="number" class="input-field" placeholder="0" value="${inc.amount || ''}" data-idx="${idx}" data-key="amount" data-list="income">
+        </div>
+      </div>
+      <div style="margin-top: 12px; display: flex; align-items: center; gap: 12px; font-size: 15px; color: var(--ink-dim);">
+        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+          <input type="checkbox" ${inc.growsWithInflation ? 'checked' : ''} data-idx="${idx}" data-key="growsWithInflation" data-list="income" style="width: 18px; height: 18px;">
+          물가에 따라 인상됨
+        </label>
+        <button class="prop-card-remove" data-remove="income" data-idx="${idx}">삭제</button>
+      </div>
+    `;
+    list.appendChild(row);
+  });
+  bindListEvents();
+}
+
+function renderExpenseList() {
+  const list = document.getElementById('expenseList');
+  list.innerHTML = '';
+  if (state.expenses.length === 0) {
+    state.expenses = [
+      { name: '생활비', amount: 0, growsWithInflation: true },
+      { name: '대출이자', amount: 0, growsWithInflation: false },
+      { name: '의료비', amount: 0, growsWithInflation: true },
+    ];
+  }
+  state.expenses.forEach((exp, idx) => {
+    const row = document.createElement('div');
+    row.className = 'prop-card';
+    row.innerHTML = `
+      <div class="prop-grid">
+        <div class="input-group">
+          <label class="input-label">지출 이름</label>
+          <input type="text" class="input-field" placeholder="예: 생활비" value="${exp.name}" data-idx="${idx}" data-key="name" data-list="expense">
+        </div>
+        <div class="input-group">
+          <label class="input-label">월 금액 (만원)</label>
+          <input type="number" class="input-field" placeholder="0" value="${exp.amount || ''}" data-idx="${idx}" data-key="amount" data-list="expense">
+        </div>
+      </div>
+      <div style="margin-top: 12px; display: flex; align-items: center; gap: 12px; font-size: 15px; color: var(--ink-dim);">
+        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+          <input type="checkbox" ${exp.growsWithInflation ? 'checked' : ''} data-idx="${idx}" data-key="growsWithInflation" data-list="expense" style="width: 18px; height: 18px;">
+          물가에 따라 인상됨
+        </label>
+        <button class="prop-card-remove" data-remove="expense" data-idx="${idx}">삭제</button>
+      </div>
+    `;
+    list.appendChild(row);
+  });
+  bindListEvents();
+}
+
+function bindListEvents() {
+  document.querySelectorAll('[data-list]').forEach(input => {
+    input.addEventListener('change', (e) => {
+      const idx = parseInt(e.target.dataset.idx);
+      const key = e.target.dataset.key;
+      const list = e.target.dataset.list;
+      const arr = list === 'income' ? state.incomes : state.expenses;
+      if (e.target.type === 'checkbox') arr[idx][key] = e.target.checked;
+      else if (e.target.type === 'number') arr[idx][key] = num(e.target.value);
+      else arr[idx][key] = e.target.value;
+      saveStateDebounced();
+    });
+  });
+  document.querySelectorAll('[data-remove]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const idx = parseInt(btn.dataset.idx);
+      const list = btn.dataset.remove;
+      if (list === 'income') { state.incomes.splice(idx, 1); renderIncomeList(); }
+      else { state.expenses.splice(idx, 1); renderExpenseList(); }
+      saveStateDebounced();
+    });
+  });
+}
+
+function saveLevel2Inputs() {
+  ['asset_realEstate', 'asset_cash', 'asset_stock', 'asset_crypto', 'asset_etc', 'debt_total'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) state[id] = num(el.value);
+  });
+
+  document.querySelectorAll('[data-list]').forEach(input => {
+    const idx = parseInt(input.dataset.idx);
+    const key = input.dataset.key;
+    const list = input.dataset.list;
+    const arr = list === 'income' ? state.incomes : state.expenses;
+    if (input.type === 'checkbox') arr[idx][key] = input.checked;
+    else if (input.type === 'number') arr[idx][key] = num(input.value);
+    else arr[idx][key] = input.value;
+  });
+
+  const totalAssetCalc = (state.asset_realEstate || 0) + (state.asset_cash || 0) + (state.asset_stock || 0) + (state.asset_crypto || 0) + (state.asset_etc || 0);
+  if (totalAssetCalc > 0) state.totalAsset = totalAssetCalc - (state.debt_total || 0);
+
+  const incomeSum = state.incomes.reduce((s, x) => s + (x.amount || 0), 0);
+  const expenseSum = state.expenses.reduce((s, x) => s + (x.amount || 0), 0);
+  if (incomeSum > 0) state.monthlyIncome = incomeSum;
+  if (expenseSum > 0) state.monthlyExpense = expenseSum;
+}
+
+// ============ LEVEL 3 ============
+async function renderLevel3() {
+  state.level = 3;
+  updateProgress(3);
+  clearMain();
+  const main = document.getElementById('main');
+
+  await showMessages([
+    '와! 끝까지 가보시는군요. 🦉✨',
+    '이제 부동산을 <strong>개별로</strong> 입력해주시면 임대료/대출/매각 시뮬레이션까지 가능해져요.',
+    '또 미래에 일어날 <strong>큰 사건</strong> (전세 만기, 자녀 결혼, 부동산 매각 등)도 넣을 수 있어요.'
+  ], main);
+
+  const propSection = document.createElement('div');
+  propSection.className = 'detail-section';
+  propSection.innerHTML = `
+    <h3>🏘️ 부동산을 하나씩 입력해주세요</h3>
+    <div class="helper">평가액, 대출 잔액, 월 임대료, 월 이자만 알면 충분해요.</div>
+    <div id="propList"></div>
+    <button class="add-item-btn" id="addPropBtn">+ 부동산 추가</button>
+  `;
+  main.appendChild(propSection);
+
+  const eventSection = document.createElement('div');
+  eventSection.className = 'detail-section';
+  eventSection.innerHTML = `
+    <h3>⏰ 미래에 예정된 일이 있나요?</h3>
+    <div class="helper">전세 만기, 부동산 매각, 자녀 결혼/독립 등 시점이 정해진 이벤트를 추가하세요.</div>
+    <div id="eventList"></div>
+    <button class="add-item-btn" id="addEventBtn">+ 이벤트 추가</button>
+  `;
+  main.appendChild(eventSection);
+
+  const advSection = document.createElement('div');
+  advSection.className = 'detail-section';
+  advSection.innerHTML = `
+    <h3>🎚️ 고급 설정</h3>
+    <div class="input-group">
+      <label class="input-label"><strong>현금자산 운용 수익률</strong> (연)</label>
+      <div class="input-suffix-wrap">
+        <input type="number" class="input-field" id="cashReturn" step="0.1" value="${state.cashReturn}">
+        <span class="input-suffix">%</span>
+      </div>
+    </div>
+    <div class="input-group">
+      <label class="input-label"><strong>부동산 가격 상승률</strong> (연)</label>
+      <div class="input-suffix-wrap">
+        <input type="number" class="input-field" id="reGrowth" step="0.1" value="${state.reGrowth}">
+        <span class="input-suffix">%</span>
+      </div>
+    </div>
+    <div class="input-group">
+      <label class="input-label" style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
+        <input type="checkbox" id="medicalGrowth" ${state.medicalGrowth ? 'checked' : ''} style="width: 18px; height: 18px;">
+        <span><strong>의료비는 75세 이후 자동 증가</strong>로 계산</span>
+      </label>
+    </div>
+  `;
+  main.appendChild(advSection);
+
+  const actions = document.createElement('div');
+  actions.className = 'btn-row';
+  actions.innerHTML = `
+    <button class="btn btn-secondary" id="backTo2">← 2단계로</button>
+    <button class="btn btn-primary" id="goResult3">최종 결과 보기 ✨</button>
+  `;
+  main.appendChild(actions);
+
+  renderPropList();
+  renderEventList();
+
+  document.getElementById('addPropBtn').addEventListener('click', () => {
+    state.properties.push({ name: '', value: 0, loan: 0, monthlyRent: 0, monthlyInterest: 0, deposit: 0 });
+    renderPropList();
+    saveStateDebounced();
+  });
+  document.getElementById('addEventBtn').addEventListener('click', () => {
+    state.events.push({ label: '', yearsLater: 1, type: 'lump-', amount: 0, propertyIdx: null });
+    renderEventList();
+    saveStateDebounced();
+  });
+  document.getElementById('backTo2').addEventListener('click', () => renderLevel2());
+  document.getElementById('goResult3').addEventListener('click', () => {
+    saveLevel3Inputs();
+    state.resultLevel = 3;
+    saveState();
+    renderResult();
+  });
+}
+
+function renderPropList() {
+  const list = document.getElementById('propList');
+  list.innerHTML = '';
+  state.properties.forEach((prop, idx) => {
+    const row = document.createElement('div');
+    row.className = 'prop-card';
+    row.innerHTML = `
+      <div class="prop-card-header">
+        <div class="prop-card-title">🏠 부동산 #${idx + 1}</div>
+        <button class="prop-card-remove" data-remove-prop="${idx}">삭제</button>
+      </div>
+      <div class="prop-grid">
+        <div class="input-group"><label class="input-label">이름/위치</label>
+          <input type="text" class="input-field" placeholder="예: 위례 아파트" value="${prop.name}" data-pidx="${idx}" data-pkey="name"></div>
+        <div class="input-group"><label class="input-label">평가액 (만원)</label>
+          <input type="number" class="input-field" placeholder="150000" value="${prop.value || ''}" data-pidx="${idx}" data-pkey="value"></div>
+        <div class="input-group"><label class="input-label">대출 잔액 (만원)</label>
+          <input type="number" class="input-field" placeholder="20000" value="${prop.loan || ''}" data-pidx="${idx}" data-pkey="loan"></div>
+        <div class="input-group"><label class="input-label">월 이자 (만원)</label>
+          <input type="number" class="input-field" placeholder="67" value="${prop.monthlyInterest || ''}" data-pidx="${idx}" data-pkey="monthlyInterest"></div>
+        <div class="input-group"><label class="input-label">월 임대료 수입 (만원)</label>
+          <input type="number" class="input-field" placeholder="0" value="${prop.monthlyRent || ''}" data-pidx="${idx}" data-pkey="monthlyRent"></div>
+        <div class="input-group"><label class="input-label">전세보증금 (만원, 받았으면)</label>
+          <input type="number" class="input-field" placeholder="0" value="${prop.deposit || ''}" data-pidx="${idx}" data-pkey="deposit"></div>
+      </div>
+    `;
+    list.appendChild(row);
+  });
+
+  document.querySelectorAll('[data-pidx]').forEach(input => {
+    input.addEventListener('change', (e) => {
+      const idx = parseInt(e.target.dataset.pidx);
+      const key = e.target.dataset.pkey;
+      state.properties[idx][key] = e.target.type === 'number' ? num(e.target.value) : e.target.value;
+      saveStateDebounced();
+    });
+  });
+  document.querySelectorAll('[data-remove-prop]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      state.properties.splice(parseInt(btn.dataset.removeProp), 1);
+      renderPropList();
+      saveStateDebounced();
+    });
+  });
+}
+
+function renderEventList() {
+  const list = document.getElementById('eventList');
+  list.innerHTML = '';
+  state.events.forEach((ev, idx) => {
+    const row = document.createElement('div');
+    row.className = 'prop-card';
+    const propOptions = state.properties.map((p, pi) =>
+      `<option value="${pi}" ${ev.propertyIdx === pi ? 'selected' : ''}>#${pi + 1} ${p.name || '(이름 없음)'}</option>`
+    ).join('');
+    const showPropSelector = ev.type === 'sell-property';
+    row.innerHTML = `
+      <div class="prop-card-header">
+        <div class="prop-card-title">📅 이벤트 #${idx + 1}</div>
+        <button class="prop-card-remove" data-remove-ev="${idx}">삭제</button>
+      </div>
+      <div class="prop-grid">
+        <div class="input-group" style="grid-column: span 2;">
+          <label class="input-label">이벤트 이름</label>
+          <input type="text" class="input-field" placeholder="예: 위례 매각, 자녀 결혼" value="${ev.label}" data-eidx="${idx}" data-ekey="label">
+        </div>
+        <div class="input-group">
+          <label class="input-label">언제? (몇 년 후)</label>
+          <input type="number" class="input-field" placeholder="3" value="${ev.yearsLater || ''}" data-eidx="${idx}" data-ekey="yearsLater">
+        </div>
+        <div class="input-group">
+          <label class="input-label">종류</label>
+          <select class="input-field" data-eidx="${idx}" data-ekey="type" data-rerender="true" style="height: 53px;">
+            <option value="sell-property" ${ev.type === 'sell-property' ? 'selected' : ''}>🏠 부동산 매각 (자동 정리)</option>
+            <option value="lump+" ${ev.type === 'lump+' ? 'selected' : ''}>일시 수입 (보험금 등)</option>
+            <option value="lump-" ${ev.type === 'lump-' ? 'selected' : ''}>일시 지출 (결혼, 수술)</option>
+            <option value="income+" ${ev.type === 'income+' ? 'selected' : ''}>월 소득 증가 시작</option>
+            <option value="income-" ${ev.type === 'income-' ? 'selected' : ''}>월 소득 감소/종료</option>
+            <option value="expense+" ${ev.type === 'expense+' ? 'selected' : ''}>월 지출 증가 시작</option>
+            <option value="expense-" ${ev.type === 'expense-' ? 'selected' : ''}>월 지출 감소/종료</option>
+          </select>
+        </div>
+        ${showPropSelector ? `
+        <div class="input-group" style="grid-column: span 2;">
+          <label class="input-label">어떤 부동산을?</label>
+          <select class="input-field" data-eidx="${idx}" data-ekey="propertyIdx" style="height: 53px;">
+            <option value="">— 선택하세요 —</option>
+            ${propOptions}
+          </select>
+          <div class="helper" style="margin-top:8px;">선택한 부동산의 <strong>평가액 - 대출 - 전세보증금</strong>이 그 시점에 현금화되고, 해당 임대료·이자·평가액은 시뮬에서 자동 제거됩니다.</div>
+        </div>
+        ` : `
+        <div class="input-group" style="grid-column: span 2;">
+          <label class="input-label">금액 (만원, 일시는 총액 / 월 변화는 월 금액)</label>
+          <input type="number" class="input-field" placeholder="10000" value="${ev.amount || ''}" data-eidx="${idx}" data-ekey="amount">
+        </div>
+        `}
+      </div>
+    `;
+    list.appendChild(row);
+  });
+
+  document.querySelectorAll('[data-eidx]').forEach(input => {
+    input.addEventListener('change', (e) => {
+      const idx = parseInt(e.target.dataset.eidx);
+      const key = e.target.dataset.ekey;
+      let val;
+      if (e.target.type === 'number') val = num(e.target.value);
+      else if (key === 'propertyIdx') val = e.target.value === '' ? null : parseInt(e.target.value);
+      else val = e.target.value;
+      state.events[idx][key] = val;
+      saveStateDebounced();
+      if (e.target.dataset.rerender === 'true') renderEventList();
+    });
+  });
+  document.querySelectorAll('[data-remove-ev]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      state.events.splice(parseInt(btn.dataset.removeEv), 1);
+      renderEventList();
+      saveStateDebounced();
+    });
+  });
+}
+
+function saveLevel3Inputs() {
+  state.cashReturn = num(document.getElementById('cashReturn').value);
+  state.reGrowth = num(document.getElementById('reGrowth').value);
+  state.medicalGrowth = document.getElementById('medicalGrowth').checked;
+
+  document.querySelectorAll('[data-pidx]').forEach(input => {
+    const idx = parseInt(input.dataset.pidx);
+    const key = input.dataset.pkey;
+    state.properties[idx][key] = input.type === 'number' ? num(input.value) : input.value;
+  });
+  document.querySelectorAll('[data-eidx]').forEach(input => {
+    const idx = parseInt(input.dataset.eidx);
+    const key = input.dataset.ekey;
+    let val;
+    if (key === 'propertyIdx') {
+      val = input.value === '' ? null : parseInt(input.value);
+    } else if (input.type === 'number') {
+      val = num(input.value);
+    } else {
+      val = input.value;
+    }
+    state.events[idx][key] = val;
+  });
+
+  if (state.properties.length > 0) {
+    const reSum = state.properties.reduce((s, p) => s + (p.value || 0), 0);
+    const loanSum = state.properties.reduce((s, p) => s + (p.loan || 0), 0);
+    const depositSum = state.properties.reduce((s, p) => s + (p.deposit || 0), 0);
+    const rentSum = state.properties.reduce((s, p) => s + (p.monthlyRent || 0), 0);
+    const interestSum = state.properties.reduce((s, p) => s + (p.monthlyInterest || 0), 0);
+
+    state.asset_realEstate = reSum;
+    state.debt_total = loanSum + depositSum;
+
+    let rentItem = state.incomes.find(i => i.name === '임대료');
+    if (rentItem) rentItem.amount = rentSum;
+    else if (rentSum > 0) state.incomes.push({ name: '임대료', amount: rentSum, growsWithInflation: false });
+
+    let interestItem = state.expenses.find(i => i.name === '대출이자');
+    if (interestItem) interestItem.amount = interestSum;
+    else if (interestSum > 0) state.expenses.push({ name: '대출이자', amount: interestSum, growsWithInflation: false });
+  }
+}
+
+// ============ SIMULATION ============
+function simulate() {
+  const years = [], totals = [];
+  const startAge = state.myAge;
+  const endAge = Math.max(state.safetyAge + 5, 100);
+
+  let cash, realEstate, debt;
+  // 3단계: 부동산을 개별로 시뮬레이션
+  const useProps = state.resultLevel >= 3 && state.properties.length > 0;
+  // 활성 부동산 인덱스 집합 (매각되지 않은 것)
+  const activeProps = new Set();
+  let propVals = [];   // 각 부동산 평가액 (활성 동안만 reGrowth로 증가)
+  let propLoans = [];  // 각 부동산 대출 잔액
+  let propDeposits = []; // 각 부동산 전세 보증금
+
+  if (state.resultLevel === 1) {
+    cash = state.totalAsset * 0.1;
+    realEstate = state.totalAsset * 0.9;
+    debt = state.totalDebt || 0;
+  } else if (useProps) {
+    // 3단계: 부동산 별도 추적, 자산 합산은 매년 동적 계산
+    cash = (state.asset_cash || 0) + (state.asset_stock || 0) + (state.asset_crypto || 0) + (state.asset_etc || 0);
+    state.properties.forEach((p, i) => {
+      propVals[i] = p.value || 0;
+      propLoans[i] = p.loan || 0;
+      propDeposits[i] = p.deposit || 0;
+      activeProps.add(i);
+    });
+    realEstate = 0; // 3단계에선 직접 사용 안 함 (propVals 합산이 부동산 자산)
+    debt = 0;       // 3단계에선 직접 사용 안 함 (propLoans+propDeposits 합산이 부채)
+  } else {
+    cash = (state.asset_cash || 0) + (state.asset_stock || 0) + (state.asset_crypto || 0) + (state.asset_etc || 0);
+    realEstate = state.asset_realEstate || 0;
+    debt = state.debt_total || 0;
+  }
+
+  const inflFactor = 1 + state.inflation / 100;
+  const cashRet = state.cashReturn / 100;
+  const reRet = state.reGrowth / 100;
+
+  const incomeAdj = [], expenseAdj = [], lumpEvents = [], sellEvents = [];
+  state.events.forEach(ev => {
+    const atYear = ev.yearsLater;
+    if (ev.type === 'lump+') lumpEvents.push({ atYear, amount: ev.amount || 0 });
+    else if (ev.type === 'lump-') lumpEvents.push({ atYear, amount: -(ev.amount || 0) });
+    else if (ev.type === 'income+') incomeAdj.push({ from: atYear, delta: ev.amount || 0 });
+    else if (ev.type === 'income-') incomeAdj.push({ from: atYear, delta: -(ev.amount || 0) });
+    else if (ev.type === 'expense+') expenseAdj.push({ from: atYear, delta: ev.amount || 0 });
+    else if (ev.type === 'expense-') expenseAdj.push({ from: atYear, delta: -(ev.amount || 0) });
+    else if (ev.type === 'sell-property' && ev.propertyIdx !== null && ev.propertyIdx !== undefined) {
+      sellEvents.push({ atYear, propIdx: ev.propertyIdx });
+    }
+  });
+
+  let yearOffset = 0;
+  for (let age = startAge; age <= endAge; age++) {
+    let monthlyInc = 0;
+    if (state.resultLevel === 1) {
+      // 1단계 가정: 수입의 60%는 물가 연동(연금 등), 40%는 고정(임대료 등)
+      const linked = (state.monthlyIncome || 0) * 0.6 * Math.pow(inflFactor, yearOffset);
+      const fixed  = (state.monthlyIncome || 0) * 0.4;
+      monthlyInc = linked + fixed;
+    } else {
+      // 2단계+: 임대료/대출이자는 부동산이 있으면 그쪽에서 동적으로 처리
+      state.incomes.forEach(inc => {
+        if (useProps && (inc.name === '임대료' || inc.name === '대출이자')) return; // 3단계에서는 부동산에서 처리
+        const mult = inc.growsWithInflation ? Math.pow(inflFactor, yearOffset) : 1;
+        monthlyInc += (inc.amount || 0) * mult;
+      });
+      // 3단계: 활성 부동산의 월 임대료만 합산 (임대료는 보통 고정으로 가정)
+      if (useProps) {
+        activeProps.forEach(i => {
+          monthlyInc += state.properties[i].monthlyRent || 0;
+        });
+      }
+    }
+  // "얼마까지 더 써도 되는가" — 안전 여유분으로부터 역산 (모두 현재가치 기준)
+  const surplusReal = assetAtSafetyReal - state.safetyAmount;
+  // 월 추가 가능 금액도 현재 가치 기준 (사용자가 직관적으로 이해)
+  const extraMonthly = surplusReal > 0 ? Math.round(surplusReal / (yearsToSafety * 12)) : 0;
+
+  const chartHTML = state.resultLevel > 1
+    ? `<div class="chart-card">
+        <div class="chart-title">자산 추이 시뮬레이션</div>
+        <div class="chart-sub">${state.myAge}세 → ${data.years[data.years.length-1]}세까지 · <strong>명목가치 기준</strong> (안전선은 ${formatEok(state.safetyAmount)} 현재가치를 ${state.safetyAge}세 시점 명목 ${formatEok(safetyAmountNominal)}으로 환산한 값)</div>
+        <div class="chart-wrap"><canvas id="resultChart"></canvas></div>
+      </div>`
+    : '';
+
+  if (safe) {
+    verdictHeadline = `${state.safetyAge}세에 자산 <strong>${formatEok(assetAtSafety)}</strong> <span style="color: var(--ink-faint); font-size: 18px;">(현재가치 ${formatEok(assetAtSafetyReal)})</span> — 안전 기준 통과!`;
+    verdictDetail = `목표 ${formatEok(state.safetyAmount)}(현재가치) ≈ ${formatEok(safetyAmountNominal)}(${state.safetyAge}세 명목) 대비 ${formatEok(surplusReal)} 여유. 지금 생활비로 충분히 노후를 보낼 수 있어요.`;
+    if (extraMonthly >= 10) {
+      showCallout = true;
+      calloutHeadline = `여보, 우리 매달 <em>${extraMonthly}만원</em> 더 써도 괜찮대요 ~`;
+      calloutSub = `${state.safetyAge}세 자산 ${formatEok(state.safetyAmount)}(현재가치 기준) 목표를 지키면서도, 지금 생활비에 더해 매달 <strong>오늘 화폐 기준 ${extraMonthly}만원</strong>을 더 누릴 여유가 있다는 뜻이에요. (단순 근사치)`;
+    } else {
+      showCallout = true;
+      calloutHeadline = `여보, 우리 <em>지금처럼</em> 살아도 안전해요 ~`;
+      calloutSub = `더 많이 쓸 여유는 빠듯하지만, 현재 지출 수준에선 ${state.safetyAge}세 목표 ${formatEok(state.safetyAmount)}(현재가치)를 지킬 수 있어요.`;
+    }
+  } else if (halfSafe) {
+    verdictClass = 'verdict warn'; verdictIcon = '⚠';
+    verdictHeadline = `${state.safetyAge}세에 자산 <strong>${formatEok(assetAtSafety)}</strong> <span style="color: var(--ink-faint); font-size: 18px;">(현재가치 ${formatEok(assetAtSafetyReal)})</span> — 안전선 미달`;
+    verdictDetail = `자산이 소진되진 않지만 보수 기준 ${formatEok(state.safetyAmount)}(현재가치) ≈ ${formatEok(safetyAmountNominal)}(명목)에는 모자라요. 생활비를 조금 줄이거나 자산 구조를 점검할 필요가 있어요.`;
+  } else {
+    verdictClass = 'verdict danger'; verdictIcon = '✕';
+    verdictHeadline = `${state.safetyAge}세 전에 <strong>자산 소진</strong> 위험`;
+    verdictDetail = `현재 지출 수준으로는 자산이 부족할 수 있어요. 지출을 줄이거나, 더 자세히 분석해서 해결책을 찾아봐요.`;
+  }
+
+  // 1단계 가정 주석
+  const level1Note = state.resultLevel === 1
+    ? `<div class="footnote" style="margin-bottom: 20px; padding: 14px 16px; background: var(--bg-card); border: 1px dashed var(--border); border-radius: 10px; font-size: 15px; color: var(--ink-faint); line-height: 1.6;">
+        📌 <strong>1단계 가정</strong>: 수입의 60%는 물가에 연동(연금 등), 40%는 고정으로 가정 · 지출은 100% 물가 연동 · 현금자산 ${state.cashReturn}% 운용 · 부동산 ${state.reGrowth}% 상승. 더 정확하게 보시려면 2단계로 진행하세요.
+      </div>`
+    : '';
+
+  // 대출 원금 미반영 주석 (부채 있을 때) — 1단계는 totalDebt, 2단계 이상은 debt_total 참조
+  const effectiveDebt = state.resultLevel === 1 ? (state.totalDebt || 0) : (state.debt_total || 0);
+  const debtNote = effectiveDebt > 0
+    ? `<div class="footnote" style="margin-bottom: 20px; padding: 14px 16px; background: var(--bg-card); border: 1px dashed var(--border); border-radius: 10px; font-size: 15px; color: var(--ink-faint); line-height: 1.6;">
+        💡 대출/빚/전세보증금 ${formatEok(effectiveDebt)}이 총자산에서 차감되어 계산되었어요. <strong>원금 상환은 미반영</strong>(보수적 추정)이며, 월 대출이자는 지출 항목에 포함되어 있는지 확인해 주세요.
+      </div>`
+    : '';
+
+  result.innerHTML = `
+    ${showCallout ? `
+    <div class="spouse-callout">
+      <div class="spouse-callout-eyebrow">A Message For Your Spouse</div>
+      <div class="spouse-callout-headline">${calloutHeadline}</div>
+      <div class="spouse-callout-sub">${calloutSub}</div>
+    </div>` : ''}
+    <div class="${verdictClass}">
+      <div class="verdict-icon">${verdictIcon}</div>
+      <div class="verdict-headline">${verdictHeadline}</div>
+      <div class="verdict-detail">${verdictDetail}</div>
+    </div>
+    <div class="metric-grid">
+      <div class="metric">
+        <div class="metric-label">현재 총자산</div>
+        <div class="metric-value gold">${formatEok(data.totals[0])}</div>
+        <div class="metric-sub">${state.myAge}세 시점</div>
+      </div>
+      <div class="metric">
+        <div class="metric-label">월 순현금흐름</div>
+        <div class="metric-value ${netMonth >= 0 ? 'positive' : 'negative'}">${netMonth >= 0 ? '+' : ''}${Math.round(netMonth)}<span style="font-size:18px;color:var(--ink-dim);">만</span></div>
+        <div class="metric-sub">현재(${state.myAge}세) · 수입 ${state.monthlyIncome||0} − 지출 ${state.monthlyExpense||0}</div>
+      </div>
+      <div class="metric">
+        <div class="metric-label">${state.safetyAge}세 시점</div>
+        <div class="metric-value ${safe ? 'positive' : (halfSafe ? 'gold' : 'negative')}">${formatEok(assetAtSafety)}</div>
+        <div class="metric-sub">현재가치 ${formatEok(assetAtSafetyReal)} · 목표 ${formatEok(state.safetyAmount)}</div>
+      </div>
+    </div>
+    ${chartHTML}
+    ${level1Note}
+    ${debtNote}
+    <div style="text-align: center; margin: 8px 0 24px;">
+      <button class="view-input-btn" id="viewInputBtn">📝 이 결과의 입력 내용 보기</button>
+    </div>
+    <div id="askArea"></div>
+    <div class="footer-actions">
+      <button class="btn-ghost" id="restartBtn">처음부터 다시</button>
+      <div style="font-size: 15px; color: var(--ink-faint);">현재 ${state.resultLevel}단계 · 정밀도: ${state.resultLevel === 1 ? '★☆☆' : state.resultLevel === 2 ? '★★☆' : '★★★'}</div>
+    </div>
+    <div class="disclaimer">
+      ⚠️ <strong>참고용 시뮬레이션입니다.</strong> 실제 자산 가치, 세금, 시장 변동성은 다를 수 있어요. 부동산 매각 시 양도소득세, 중개수수료 등이 추가 발생합니다. 큰 결정 전엔 전문가 상담 권장.
+    </div>
+  `;
+  main.appendChild(result);
+  if (state.resultLevel > 1) {
+    drawResultChart(data);
+  }
+
+  // 입력 내용 보기 버튼
+  const vibtn = document.getElementById('viewInputBtn');
+  if (vibtn) vibtn.addEventListener('click', () => openInputReviewModal(state.resultLevel));
+
+  await new Promise(r => setTimeout(r, 500));
+  await showAskFollow(document.getElementById('askArea'));
+}
+
+// ============ INPUT REVIEW MODAL ============
+function openInputReviewModal(level) {
+  const modal = document.getElementById('inputReviewModal');
+  const title = document.getElementById('modalTitle');
+  const sub = document.getElementById('modalSub');
+  const body = document.getElementById('modalBody');
+  const editBtn = document.getElementById('modalEditBtn');
+
+  title.textContent = '📝 입력 내용';
+  sub.textContent = `Level ${level} · 정밀도 ${level === 1 ? '★☆☆' : level === 2 ? '★★☆' : '★★★'}`;
+  body.innerHTML = buildReviewContent(level);
+
+  // 수정 버튼 — 해당 단계로 이동
+  editBtn.onclick = () => {
+    closeInputReviewModal();
+    if (level === 3) renderLevel3();
+    else if (level === 2) renderLevel2();
+    else renderLevel1();
+  };
+
+  modal.classList.add('visible');
+  modal.setAttribute('aria-hidden', 'false');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeInputReviewModal() {
+  const modal = document.getElementById('inputReviewModal');
+  modal.classList.remove('visible');
+  modal.setAttribute('aria-hidden', 'true');
+  document.body.style.overflow = '';
+}
+
+function buildReviewContent(level) {
+  const parts = [];
+
+  // 안전 기준 — 현재가치(입력) + 미래 환산 명목값
+  const yearsToSafety_modal = Math.max(state.safetyAge - state.myAge, 1);
+  const inflMult_modal = Math.pow(1 + state.inflation / 100, yearsToSafety_modal);
+  const safetyAmountNominal_modal = state.safetyAmount * inflMult_modal;
+
+  // ===== 공통: 기본 정보 (모든 단계) =====
+  const baseRows = [
+    { label: '본인 나이', value: state.myAge ? `${state.myAge}세` : '—' },
+    { label: '배우자 나이', value: state.spouseAge ? `${state.spouseAge}세` : '—', dim: !state.spouseAge },
+    { label: '총자산 (대략)', value: formatEok(state.totalAsset), gold: true },
+    { label: '대출/빚/보증금 (1단계)', value: state.totalDebt > 0 ? formatEok(state.totalDebt) : '없음', red: state.totalDebt > 0, dim: !state.totalDebt },
+    { label: '월 총소득', value: state.monthlyIncome ? `${state.monthlyIncome}만원` : '—', green: state.monthlyIncome > 0 },
+    { label: '월 총지출', value: state.monthlyExpense ? `${state.monthlyExpense}만원` : '—', red: state.monthlyExpense > 0 },
+    { label: '안전 기준 나이', value: `${state.safetyAge}세까지` },
+    { label: '안전 기준 (현재가치)', value: formatEok(state.safetyAmount), gold: true },
+    { label: `→ ${state.safetyAge}세 시점 명목`, value: formatEok(safetyAmountNominal_modal), dim: true },
+  ];
+  parts.push(buildSection('🔹 1단계 — 기본 정보', baseRows));
+
+  // ===== 2단계 이상 =====
+  if (level >= 2) {
+    // 자산 분류
+    const assetRows = [
+      { label: '부동산 평가액', value: state.asset_realEstate ? formatEok(state.asset_realEstate) : '—', dim: !state.asset_realEstate },
+      { label: '현금/예금', value: state.asset_cash ? formatEok(state.asset_cash) : '—', dim: !state.asset_cash },
+      { label: '주식/펀드', value: state.asset_stock ? formatEok(state.asset_stock) : '—', dim: !state.asset_stock },
+      { label: '가상자산', value: state.asset_crypto ? formatEok(state.asset_crypto) : '—', dim: !state.asset_crypto },
+      { label: '기타 자산', value: state.asset_etc ? formatEok(state.asset_etc) : '—', dim: !state.asset_etc },
+      { label: '총 부채 (2단계)', value: state.debt_total > 0 ? formatEok(state.debt_total) : '없음', red: state.debt_total > 0, dim: !state.debt_total },
+    ];
+    parts.push(buildSection('🔹 2단계 — 자산 분류', assetRows));
+
+    // 소득 항목별
+    parts.push(buildListSection('💰 월 소득 항목별', state.incomes, (inc) => ({
+      label: inc.name || '(이름 없음)',
+      value: `${inc.amount || 0}만원${inc.growsWithInflation ? ' 📈' : ''}`,
+      dim: !inc.amount,
+    })));
+
+    // 지출 항목별
+    parts.push(buildListSection('🛒 월 지출 항목별', state.expenses, (exp) => ({
+      label: exp.name || '(이름 없음)',
+      value: `${exp.amount || 0}만원${exp.growsWithInflation ? ' 📈' : ''}`,
+      dim: !exp.amount,
+    })));
+
+    // 시뮬 설정
+    const settingRows = [
+      { label: '물가상승률', value: `연 ${state.inflation}%` },
+    ];
+    parts.push(buildSection('📈 시뮬 설정', settingRows));
+  }
+
+  // ===== 3단계 =====
+  if (level >= 3) {
+    // 부동산 개별 카드
+    parts.push(buildPropSection());
+    // 이벤트 카드
+    parts.push(buildEventSection());
+    // 고급 설정
+    const advRows = [
+      { label: '현금자산 운용 수익률', value: `연 ${state.cashReturn}%` },
+      { label: '부동산 가격 상승률', value: `연 ${state.reGrowth}%` },
+      { label: '75세 이후 의료비 자동증가', value: state.medicalGrowth ? '✓ 켜짐' : '✗ 꺼짐', green: state.medicalGrowth },
+    ];
+    parts.push(buildSection('🎚️ 3단계 — 고급 설정', advRows));
+  }
+
+  // 푸트 안내 — 물가 연동 아이콘 설명
+  if (level >= 2) {
+    parts.push(`<div style="margin-top: 16px; padding: 12px 16px; background: var(--bg-elevated); border-radius: 8px; font-size: 15px; color: var(--ink-faint); text-align: center;">📈 표시: 물가에 따라 매년 인상됨</div>`);
+  }
+
+  return parts.join('');
+}
+
+function buildSection(title, rows) {
+  const html = rows.map(r => {
+    let cls = 'rev-row-value';
+    if (r.gold) cls += ' gold';
+    if (r.green) cls += ' green';
+    if (r.red) cls += ' red';
+    if (r.dim) cls += ' dim';
+    return `<div class="rev-row"><span class="rev-row-label">${r.label}</span><span class="${cls}">${r.value}</span></div>`;
+  }).join('');
+  return `<div class="rev-section"><div class="rev-section-title">${title}</div><div class="rev-grid">${html}</div></div>`;
+}
+
+function buildListSection(title, list, mapFn) {
+  if (!list || !list.length) {
+    return `<div class="rev-section"><div class="rev-section-title">${title}</div><div class="rev-empty">입력된 항목이 없습니다.</div></div>`;
+  }
+  const rows = list.map(mapFn);
+  return buildSection(title, rows);
+}
+
+function buildPropSection() {
+  if (!state.properties || !state.properties.length) {
+    return `<div class="rev-section"><div class="rev-section-title">🏘️ 부동산 개별</div><div class="rev-empty">입력된 부동산이 없습니다.</div></div>`;
+  }
+  const cards = state.properties.map((p, idx) => `
+    <div class="rev-prop-card">
+      <div class="rev-prop-card-title">🏠 #${idx + 1} ${p.name || '(이름 없음)'}</div>
+      <div class="rev-prop-grid">
+        <div><span>평가액</span><span>${p.value ? formatEok(p.value) : '—'}</span></div>
+        <div><span>대출 잔액</span><span>${p.loan ? formatEok(p.loan) : '없음'}</span></div>
+        <div><span>전세보증금</span><span>${p.deposit ? formatEok(p.deposit) : '없음'}</span></div>
+        <div><span>월 임대료</span><span>${p.monthlyRent ? p.monthlyRent + '만원' : '—'}</span></div>
+        <div><span>월 이자</span><span>${p.monthlyInterest ? p.monthlyInterest + '만원' : '—'}</span></div>
+      </div>
+    </div>
+  `).join('');
+  return `<div class="rev-section"><div class="rev-section-title">🏘️ 부동산 개별</div>${cards}</div>`;
+}
+
+function buildEventSection() {
+  if (!state.events || !state.events.length) {
+    return `<div class="rev-section"><div class="rev-section-title">⏰ 미래 이벤트</div><div class="rev-empty">입력된 이벤트가 없습니다.</div></div>`;
+  }
+  const typeLabel = {
+    'sell-property': '🏠 부동산 매각',
+    'lump+': '일시 수입',
+    'lump-': '일시 지출',
+    'income+': '월 소득 증가',
+    'income-': '월 소득 감소',
+    'expense+': '월 지출 증가',
+    'expense-': '월 지출 감소',
+  };
+  const cards = state.events.map((ev, idx) => {
+    const targetAge = state.myAge + (ev.yearsLater || 0);
+    let detail = '';
+    if (ev.type === 'sell-property' && ev.propertyIdx !== null && ev.propertyIdx !== undefined) {
+      const target = state.properties[ev.propertyIdx];
+      detail = `대상: ${target ? target.name || `부동산 #${ev.propertyIdx + 1}` : '(없음)'}`;
+    } else if (ev.amount) {
+      detail = `금액: ${formatEok(ev.amount)}`;
+    } else {
+      detail = '금액 미입력';
+    }
+    return `
+      <div class="rev-event-card">
+        <div class="rev-event-card-title">📅 #${idx + 1} ${ev.label || '(이름 없음)'}</div>
+        <div class="rev-prop-grid">
+          <div><span>종류</span><span>${typeLabel[ev.type] || ev.type}</span></div>
+          <div><span>시점</span><span>${ev.yearsLater || 0}년 후 (${targetAge}세)</span></div>
+          <div style="grid-column: span 2;"><span>${detail.split(':')[0]}</span><span>${detail.split(':').slice(1).join(':').trim()}</span></div>
+        </div>
+      </div>
+    `;
+  }).join('');
+  return `<div class="rev-section"><div class="rev-section-title">⏰ 미래 이벤트</div>${cards}</div>`;
+}
+
+// 모달 닫기 — 글로벌 핸들러 (한 번만 바인딩)
+(function setupModalHandlers() {
+  document.addEventListener('click', (e) => {
+    if (e.target.id === 'modalCloseBtn' || e.target.id === 'modalCloseBtn2') {
+      closeInputReviewModal();
+    }
+    // 오버레이 자체 클릭(카드 외부)도 닫기
+    if (e.target.id === 'inputReviewModal') {
+      closeInputReviewModal();
+    }
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      const modal = document.getElementById('inputReviewModal');
+      if (modal && modal.classList.contains('visible')) closeInputReviewModal();
+    }
+  });
+})();
+
+function drawResultChart(data) {
+  const ctx = document.getElementById('resultChart').getContext('2d');
+  if (chartInstance) chartInstance.destroy();
+
+  // 안전선은 미래 명목가치로 환산 (state.safetyAmount는 현재가치 기준)
+  const inflMult = Math.pow(1 + state.inflation / 100, Math.max(state.safetyAge - state.myAge, 1));
+  const safetyAmountNominal = state.safetyAmount * inflMult;
+  const safetyLine = data.years.map(y => y === state.safetyAge ? safetyAmountNominal : null);
+  const zeroLine = data.years.map(() => 0);
+
+  chartInstance = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: data.years,
+      datasets: [
+        {
+          label: '예상 자산',
+          data: data.totals,
+          borderColor: '#d4a857',
+          backgroundColor: 'rgba(212, 168, 87, 0.1)',
+          borderWidth: 2.5,
+          fill: true, tension: 0.3,
+          pointRadius: 0, pointHoverRadius: 5,
+        },
+        {
+          label: `안전선 (${state.safetyAge}세 명목 ${formatEok(safetyAmountNominal)} = 현재 ${formatEok(state.safetyAmount)})`,
+          data: safetyLine,
+          borderColor: '#e07a7a',
+          backgroundColor: '#e07a7a',
+          borderWidth: 0,
+          pointRadius: 8,
+          pointStyle: 'rectRot',
+          showLine: false,
+        },
+        {
+          label: '0원선',
+          data: zeroLine,
+          borderColor: 'rgba(224, 122, 122, 0.3)',
+          borderWidth: 1,
+          borderDash: [2, 4],
+          pointRadius: 0,
+          fill: false,
+        }
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
+      plugins: {
+        legend: {
+          position: 'bottom',
+          labels: { color: '#c0c8d0', font: { family: 'Noto Sans KR', size: 15 }, padding: 16, usePointStyle: true, pointStyle: 'line' }
+        },
+        tooltip: {
+          backgroundColor: '#1a2028', borderColor: '#2a3340', borderWidth: 1, padding: 14,
+          titleColor: '#e8ecef', bodyColor: '#e8ecef',
+          titleFont: { family: 'Fraunces', size: 15, weight: '500' },
+          bodyFont: { family: 'JetBrains Mono', size: 15 },
+          callbacks: {
+            title: (items) => `${items[0].label}세`,
+            label: (item) => item.raw === null ? null : ` ${item.dataset.label}: ${formatEok(item.raw)}원`
+          }
+        }
+      },
+      scales: {
+        x: {
+          grid: { color: 'rgba(42, 51, 64, 0.5)' },
+          ticks: {
+            color: '#8a96a3', font: { family: 'JetBrains Mono', size: 15 },
+            callback: function(val, idx) {
+              const age = this.getLabelForValue(val);
+              if (age % 5 === 0 || idx === 0) return age + '세';
+              return '';
+            }
+          }
+        },
+        y: {
+          grid: { color: 'rgba(42, 51, 64, 0.5)' },
+          ticks: { color: '#8a96a3', font: { family: 'JetBrains Mono', size: 15 }, callback: (val) => formatEok(val) }
+        }
+      }
+    }
+  });
+}
+
+// ============ FOLLOW-UP ASK ============
+async function showAskFollow(container) {
+  if (state.resultLevel === 1) {
+    await showMessages(['<strong>어때요?</strong> 결과가 만족스러우신가요?'], container);
+    const choices = document.createElement('div');
+    choices.className = 'choice-row';
+    choices.innerHTML = `
+      <button class="choice-btn" data-answer="satisfied">
+        <span class="choice-emoji">😊</span>
+        <div class="choice-title">네, 충분해요</div>
+        <div class="choice-desc">이 정도면 됐어요</div>
+      </button>
+      <button class="choice-btn" data-answer="more">
+        <span class="choice-emoji">🤔</span>
+        <div class="choice-title">더 자세히 보고 싶어요</div>
+        <div class="choice-desc">정확하게 다시 계산</div>
+      </button>
+    `;
+    container.appendChild(choices);
+    choices.querySelectorAll('.choice-btn').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        if (btn.dataset.answer === 'satisfied') {
+          choices.remove();
+          await showMessages([
+            '네, 감사합니다! 😊',
+            '혹시 나중에 더 정확하게 보고 싶으시면 아래 <strong>"더 자세히 보기"</strong> 버튼을 눌러주세요. 자산을 종류별로 나누고 소득도 항목별로 입력하면 훨씬 정밀해져요.'
+          ], container);
+          const offer = document.createElement('div');
+          offer.style.marginTop = '20px';
+          offer.innerHTML = `<button class="btn btn-secondary" id="goLevel2Late">더 자세히 보기 →</button>`;
+          container.appendChild(offer);
+          document.getElementById('goLevel2Late').addEventListener('click', () => renderLevel2());
+        } else {
+          choices.remove();
+          await showMessages([
+            '좋아요! 그럼 한 단계 더 자세히 가볼게요. 🦉',
+            '<strong>자산을 종류별로</strong> 나누고 <strong>소득도 항목별로</strong> 입력해주시면 미래 예측이 훨씬 정확해져요. 시간은 2~3분쯤 걸려요.'
+          ], container);
+          const goBtn = document.createElement('div');
+          goBtn.style.marginTop = '20px';
+          goBtn.innerHTML = `<button class="btn btn-primary" id="goLevel2">자세히 입력하러 가기 →</button>`;
+          container.appendChild(goBtn);
+          document.getElementById('goLevel2').addEventListener('click', () => renderLevel2());
+        }
+      });
+    });
+  } else if (state.resultLevel === 2) {
+    await showMessages(['훨씬 더 정확해졌어요! <strong>이제 어떠세요?</strong>'], container);
+    const choices = document.createElement('div');
+    choices.className = 'choice-row';
+    choices.innerHTML = `
+      <button class="choice-btn" data-answer="satisfied">
+        <span class="choice-emoji">✨</span>
+        <div class="choice-title">만족해요</div>
+        <div class="choice-desc">이 정도면 충분해요</div>
+      </button>
+      <button class="choice-btn" data-answer="more">
+        <span class="choice-emoji">🔍</span>
+        <div class="choice-title">끝까지 가볼래요</div>
+        <div class="choice-desc">부동산 개별 + 미래 이벤트</div>
+      </button>
+    `;
+    container.appendChild(choices);
+    choices.querySelectorAll('.choice-btn').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        if (btn.dataset.answer === 'satisfied') {
+          choices.remove();
+          await showMessages([
+            '훌륭해요! 😊 이 정도면 노후 계획에 충분한 정보를 얻으셨을 거예요.',
+            '혹시 부동산이 여러 채이거나 <strong>전세 만기 같은 미래 이벤트</strong>를 반영하고 싶으시면 마지막 단계도 있어요.'
+          ], container);
+          const offer = document.createElement('div');
+          offer.style.marginTop = '20px';
+          offer.innerHTML = `<button class="btn btn-secondary" id="goLevel3Late">전문가 모드 →</button>`;
+          container.appendChild(offer);
+          document.getElementById('goLevel3Late').addEventListener('click', () => renderLevel3());
+        } else {
+          choices.remove();
+          await showMessages([
+            '와! 끝까지 가시는군요. 🦉🔥',
+            '마지막 단계에선 <strong>부동산을 하나씩 따로</strong> 입력하고, <strong>전세 만기·자녀 결혼·매각</strong> 같은 미래 이벤트도 추가할 수 있어요.'
+          ], container);
+          const goBtn = document.createElement('div');
+          goBtn.style.marginTop = '20px';
+          goBtn.innerHTML = `<button class="btn btn-primary" id="goLevel3">전문가 모드로 가기 →</button>`;
+          container.appendChild(goBtn);
+          document.getElementById('goLevel3').addEventListener('click', () => renderLevel3());
+        }
+      });
+    });
+  } else if (state.resultLevel === 3) {
+    await showMessages([
+      '<strong>축하해요!</strong> 가장 정밀한 분석을 완료하셨어요. ✨🦉',
+      '입력하신 정보를 수정하고 싶으시면 언제든 단계로 돌아가서 바꾸시면 돼요.'
+    ], container);
+    const actions = document.createElement('div');
+    actions.className = 'choice-row';
+    actions.innerHTML = `
+      <button class="choice-btn" id="editLevel3">
+        <span class="choice-emoji">✏️</span>
+        <div class="choice-title">입력 수정</div>
+        <div class="choice-desc">3단계로 돌아가기</div>
+      </button>
+      <button class="choice-btn" id="printResult">
+        <span class="choice-emoji">🖨️</span>
+        <div class="choice-title">결과 저장</div>
+        <div class="choice-desc">화면 캡처해서 보관</div>
+      </button>
+    `;
+    container.appendChild(actions);
+    document.getElementById('editLevel3').addEventListener('click', () => renderLevel3());
+    document.getElementById('printResult').addEventListener('click', () => {
+      alert('💡 휴대폰: 화면 캡처 / PC: Ctrl+P 또는 Cmd+P로 PDF 저장하세요!');
+    });
+  }
+}
+
+document.addEventListener('click', (e) => {
+  if (e.target.id === 'restartBtn') {
+    if (confirm('처음부터 다시 시작할까요? 입력한 정보가 모두 지워져요.')) {
+      Object.assign(state, JSON.parse(JSON.stringify(DEFAULT_STATE)));
+      clearStoredState();
+      // incomes/expenses는 빈 배열 — renderIncomeList/renderExpenseList 진입 시 기본 항목으로 채워짐
+      renderLevel1();
+    }
+  }
+});
+
+// ============ BOOTSTRAP: 저장된 state가 있으면 복원 안내 ============
+async function bootstrap() {
+  const saved = loadState();
+  if (saved && saved.state && isStateMeaningful(saved.state)) {
+    await renderResumePrompt(saved);
+  } else {
+    renderLevel1();
+  }
+}
+
+async function renderResumePrompt(saved) {
+  clearMain();
+  updateProgress(1);
+  const main = document.getElementById('main');
+
+  await showMessages([
+    '안녕하세요! 저는 <strong>부엉이</strong>예요. 🦉',
+    '<strong>이전에 입력하신 정보</strong>가 있네요. 이어서 하시겠어요? 그대로 결과를 다시 보시거나, 단계를 골라서 수정하실 수 있어요.'
+  ], main);
+
+  const s = saved.state;
+  const summary = [];
+  if (s.myAge) summary.push(`${s.myAge}세`);
+  if (s.totalAsset) summary.push(`자산 ${formatEok(s.totalAsset)}`);
+  if (s.totalDebt) summary.push(`부채 ${formatEok(s.totalDebt)}`);
+  if (s.monthlyIncome) summary.push(`월수입 ${s.monthlyIncome}만`);
+  if (s.monthlyExpense) summary.push(`월지출 ${s.monthlyExpense}만`);
+
+  const savedDate = saved.savedAt ? new Date(saved.savedAt).toLocaleString('ko-KR', { dateStyle: 'medium', timeStyle: 'short' }) : '—';
+  // 가장 깊이 진행한 단계 추정
+  let lastLevel = 1;
+  if (s.properties && s.properties.length) lastLevel = 3;
+  else if (s.incomes && s.incomes.length) lastLevel = 2;
+  else if (s.resultLevel) lastLevel = s.resultLevel;
+
+  const banner = document.createElement('div');
+  banner.className = 'resume-banner';
+  banner.innerHTML = `
+    <div>
+      <div class="resume-banner-text">📂 <strong>${summary.join(' · ') || '입력 데이터'}</strong></div>
+      <div class="resume-banner-meta">마지막 저장: ${savedDate} · 진행 단계: ${lastLevel}단계</div>
+    </div>
+    <div class="resume-banner-actions">
+      <button id="resumeResult">결과 다시 보기 →</button>
+      <button id="resumeEdit" class="secondary">${lastLevel}단계에서 수정</button>
+      <button id="resumeRestart" class="secondary">처음부터</button>
+    </div>
+  `;
+  main.appendChild(banner);
+
+  document.getElementById('resumeResult').addEventListener('click', () => {
+    Object.assign(state, s);
+    if (!state.resultLevel) state.resultLevel = lastLevel;
+    renderResult();
+  });
+  document.getElementById('resumeEdit').addEventListener('click', () => {
+    Object.assign(state, s);
+    if (lastLevel === 3) renderLevel3();
+    else if (lastLevel === 2) renderLevel2();
+    else renderLevel1();
+  });
+  document.getElementById('resumeRestart').addEventListener('click', () => {
+    if (confirm('저장된 정보를 모두 지우고 처음부터 시작할까요?')) {
+      Object.assign(state, JSON.parse(JSON.stringify(DEFAULT_STATE)));
+      clearStoredState();
+      renderLevel1();
+    }
+  });
+}
+
+bootstrap();
+</script>
+</body>
+</html>
