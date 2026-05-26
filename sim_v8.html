@@ -43,7 +43,7 @@ body {
 .container {
   max-width: 880px;
   margin: 0 auto;
-  padding: 40px 24px 80px;
+  padding: 110px 24px 80px;
 }
 
 .header {
@@ -949,6 +949,78 @@ body {
   .modal-body { padding: 18px 20px; }
   .modal-footer { padding: 14px 20px; }
 }
+
+/* === Top Navbar (Gudokpin style) === */
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 70px;
+  background: rgba(26, 32, 40, 0.85);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  padding: 0 24px;
+}
+
+.navbar-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  max-width: 880px;
+  margin: 0 auto;
+}
+
+.navbar-logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 700;
+  font-size: 20px;
+  color: var(--ink);
+  text-decoration: none;
+}
+
+.navbar-logo .logo-owl {
+  font-size: 24px;
+}
+
+.navbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.navbar-cart {
+  color: var(--ink-dim);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s;
+}
+
+.navbar-cart:hover {
+  color: var(--gold-bright);
+}
+
+.navbar-profile {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: #2563eb;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.3);
+}
 </style>
 </head>
 <body>
@@ -969,6 +1041,25 @@ body {
     </div>
   </div>
 </div>
+
+<!-- Top Navigation Bar (Gudokpin style) -->
+<nav class="navbar">
+  <div class="navbar-container">
+    <a href="index.html" class="navbar-logo">
+      <span class="logo-owl">🦉</span>
+      <span>SOMEMORE</span>
+    </a>
+    <div class="navbar-actions">
+      <a href="#" class="navbar-cart" aria-label="장바구니">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
+      </a>
+      <div class="navbar-profile" title="마이페이지">
+        <span>ne</span>
+      </div>
+    </div>
+  </div>
+</nav>
+
 <div class="container">
 
   <header class="header">
