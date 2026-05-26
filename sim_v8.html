@@ -1072,10 +1072,10 @@ body {
       <span>SOMEMORE</span>
     </a>
     <div class="navbar-actions">
-      <a href="#" class="navbar-cart" aria-label="장바구니">
+      <a href="#" id="navbarCart" class="navbar-cart" aria-label="장바구니">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
       </a>
-      <div class="navbar-profile" title="마이페이지">
+      <div id="navbarProfile" class="navbar-profile" title="마이페이지">
         <span>ne</span>
       </div>
     </div>
@@ -1127,6 +1127,7 @@ body {
 <script>
 const STORAGE_KEY = 'retirement_sim_state_v1';
 const STORAGE_VERSION = 1; // state 스키마 바뀌면 올리기
+let startLevelParam = null;
 
 const DEFAULT_STATE = {
   level: 1, resultLevel: 0,
@@ -2710,6 +2711,48 @@ async function showAskFollow(container) {
   }
 }
 
+// Custom Toast Alert for Inactive Items
+function showToast(message) {
+  let toast = document.getElementById('customToast');
+  if (!toast) {
+    toast = document.createElement('div');
+    toast.id = 'customToast';
+    toast.style.position = 'fixed';
+    toast.style.bottom = '24px';
+    toast.style.left = '50%';
+    toast.style.transform = 'translateX(-50%) translateY(100px)';
+    toast.style.background = 'rgba(26, 32, 40, 0.95)';
+    toast.style.border = '1px solid var(--gold, #d4a857)';
+    toast.style.color = 'var(--ink, #e8ecef)';
+    toast.style.padding = '12px 24px';
+    toast.style.borderRadius = '30px';
+    toast.style.fontSize = '15px';
+    toast.style.fontWeight = '500';
+    toast.style.zIndex = '9999';
+    toast.style.boxShadow = '0 8px 32px rgba(0, 0, 0, 0.5)';
+    toast.style.transition = 'transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s ease';
+    toast.style.opacity = '0';
+    toast.style.pointerEvents = 'none';
+    toast.style.display = 'flex';
+    toast.style.alignItems = 'center';
+    toast.style.gap = '8px';
+    toast.innerHTML = `<span>🦉</span><span id="toastMsg"></span>`;
+    document.body.appendChild(toast);
+  }
+  
+  const msgEl = document.getElementById('toastMsg');
+  msgEl.innerText = message;
+  
+  toast.style.opacity = '1';
+  toast.style.transform = 'translateX(-50%) translateY(0)';
+  
+  clearTimeout(toast.timeoutId);
+  toast.timeoutId = setTimeout(() => {
+    toast.style.opacity = '0';
+    toast.style.transform = 'translateX(-50%) translateY(100px)';
+  }, 2500);
+}
+
 document.addEventListener('click', (e) => {
   if (e.target.id === 'restartBtn') {
     if (confirm('처음부터 다시 시작할까요? 입력한 정보가 모두 지워져요.')) {
@@ -2719,15 +2762,34 @@ document.addEventListener('click', (e) => {
       renderLevel1();
     }
   }
+  const cartBtn = e.target.closest('#navbarCart');
+  if (cartBtn) {
+    e.preventDefault();
+    showToast('장바구니 서비스 준비 중입니다! 🦉');
+  }
+  const profileBtn = e.target.closest('#navbarProfile');
+  if (profileBtn) {
+    showToast('마이페이지 서비스 준비 중입니다! 🦉');
+  }
 });
 
 // ============ BOOTSTRAP: 저장된 state가 있으면 복원 안내 ============
 async function bootstrap() {
   const saved = loadState();
-  if (saved && saved.state && isStateMeaningful(saved.state)) {
-    await renderResumePrompt(saved);
+  if (saved && saved.state) {
+    Object.assign(state, saved.state);
+  }
+
+  if (startLevelParam === 2) {
+    renderLevel2();
+  } else if (startLevelParam === 3) {
+    renderLevel3();
   } else {
-    renderLevel1();
+    if (saved && saved.state && isStateMeaningful(saved.state)) {
+      await renderResumePrompt(saved);
+    } else {
+      renderLevel1();
+    }
   }
 }
 

@@ -39,6 +39,9 @@ if page == "sim":
     # 시뮬레이터 로드
     with open("sim_v8.html", "r", encoding="utf-8") as f:
         html = f.read()
+    # 쿼리 매개변수에서 startLevel 추출하여 시뮬레이터 내 let startLevelParam 변수와 결합
+    start_level = query_params.get("startLevel", "null")
+    html = html.replace("let startLevelParam = null;", f"let startLevelParam = {start_level};")
     # 시뮬레이터 내에서 홈으로 가는 링크가 있을 경우에 대비해 라우팅 경로 보정
     html = html.replace('href="index.html"', 'href="/"')
 else:
@@ -51,6 +54,9 @@ else:
     # index.html 내의 외부 스타일시트 링크를 인라인 스타일로 치환 (아이프레임 내에서 로드되도록)
     html = html.replace('<link rel="stylesheet" href="index.css">', f'<style>{css}</style>')
     # 3단계 카드 및 시작 버튼 링크를 Streamlit 쿼리 파라미터 링크로 치환
+    html = html.replace('href="sim_v8.html?startLevel=1"', 'href="/?page=sim&startLevel=1"')
+    html = html.replace('href="sim_v8.html?startLevel=2"', 'href="/?page=sim&startLevel=2"')
+    html = html.replace('href="sim_v8.html?startLevel=3"', 'href="/?page=sim&startLevel=3"')
     html = html.replace('href="sim_v8.html"', 'href="/?page=sim"')
     html = html.replace('href="index.html"', 'href="/"')
 
