@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🦉 은퇴연구소 - 노후 자산 시뮬레이터</title>
+  <meta name="description" content="여보! 우리 은퇴 후에 생활비 좀 더 써도 된대요 ~ 30초만에 확인하는 노후 자산 시뮬레이션">
+  
+  <!-- Open Graph -->
+  <meta property="og:title" content="은퇴연구소 - 노후 자산 시뮬레이터" />
+  <meta property="og:description" content="여보, 우리 은퇴 후에 생활비 좀 더 써도 된대요 ~ 30초만에 확인하는 안심 노후 설계" />
+  <meta property="og:type" content="website" />
+  
+  <link rel="stylesheet" href="index.css">
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="header">
+    <div class="container" style="width: 100%; display: flex; justify-content: space-between; align-items: center;">
+      <a href="index.html" class="logo-group">
+        <span class="logo-owl">🦉</span>
+        <span>은퇴연구소</span>
+      </a>
+      <nav class="nav-links">
+        <a href="sim_v8.html" class="nav-link">시뮬레이터 시작</a>
+        <a href="#levels" class="nav-link">단계별 비교</a>
+        <a href="#trust" class="nav-link">신뢰성 기준</a>
+        <a href="#faq" class="nav-link">자주 묻는 질문</a>
+      </nav>
+      <a href="sim_v8.html" class="header-cta">시뮬레이션 시작 →</a>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="container">
+      <div class="hero-badge">
+        <span class="hero-badge-icon">✓</span>
+        <span>한국은행 물가목표 · 국민연금법 · 통계청 국민생명표 모델 반영</span>
+      </div>
+      <h1 class="hero-title">
+        여보, 우리 은퇴 후에<br>
+        생활비 <em>좀 더</em> <span class="glow">사용해도 된대요 ~</span>
+      </h1>
+      <p class="hero-desc">
+        막연한 노후 자산 고갈 공포에서 벗어나세요. 국민연금 물가상승 보정법과 생애 주기별 의료비 통계를 적용한 공인 기준 시뮬레이터로 배우자와 나를 위한 안심 은퇴 라이프를 설계해 보세요.
+      </p>
+      <div class="hero-actions">
+        <a href="sim_v8.html" class="btn-large btn-primary">
+          <span>30초 무료 진단 시작하기</span>
+          <span>⚡</span>
+        </a>
+        <a href="#levels" class="btn-large btn-secondary">단계별 비교 보기</a>
+      </div>
+
+      <!-- Owl Assistant Illustration -->
+      <div class="hero-owl-wrap">
+        <div class="hero-owl-card">
+          <svg class="hero-owl-svg" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+            <ellipse cx="32" cy="38" rx="22" ry="22" fill="#d4a857" opacity="0.9"/>
+            <ellipse cx="32" cy="42" rx="14" ry="16" fill="#f4c97a" opacity="0.5"/>
+            <path d="M 14 22 L 18 12 L 24 18 Z" fill="#b8902f"/>
+            <path d="M 50 22 L 46 12 L 40 18 Z" fill="#b8902f"/>
+            <circle cx="24" cy="28" r="9" fill="#1a2028"/>
+            <circle cx="40" cy="28" r="9" fill="#1a2028"/>
+            <circle cx="25" cy="28" r="4" fill="#f4c97a"/>
+            <circle cx="41" cy="28" r="4" fill="#f4c97a"/>
+            <circle cx="26" cy="27" r="1.5" fill="#1a2028"/>
+            <circle cx="42" cy="27" r="1.5" fill="#1a2028"/>
+            <path d="M 32 32 L 28 38 L 36 38 Z" fill="#b8902f"/>
+            <path d="M 12 38 Q 14 48 22 50" fill="none" stroke="#b8902f" stroke-width="2" stroke-linecap="round"/>
+            <path d="M 52 38 Q 50 48 42 50" fill="none" stroke="#b8902f" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+          <div class="hero-owl-bubble">
+            <strong>안녕하세요! 부엉이 가이드예요.</strong> 🦉<br>
+            "돈이 언제 고갈될지 몰라 생활비를 무조건 줄이려고만 하셨나요? 은퇴연구소와 함께 매월 사용할 수 있는 안전한 생활비 규모를 직접 확인해 보세요!"
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Level Selection Cards (Gudokpin style) -->
+  <section class="levels-section" id="levels" style="padding: 60px 0;">
+    <div class="container">
+      <div class="section-title">
+        <h2>어디까지 자세히 알아볼까요?</h2>
+        <p>간단한 30초 진단부터 개별 부동산 매각 이벤트 반영까지 준비되어 있습니다.</p>
+      </div>
+
+      <div class="grid-cards">
+        <!-- Level 1 Card -->
+        <div class="level-card">
+          <div class="card-meta">
+            <span class="card-level-num">LEVEL 1</span>
+            <span class="card-badge-free">100% 무료</span>
+          </div>
+          <h3 class="card-title">30초 초간단 진단</h3>
+          <p class="card-desc">나이, 자산, 소득, 지출 총액만으로 은퇴 안전 여부의 대략적인 방향성을 빠르게 파악합니다.</p>
+          <div class="card-feature-title">제공 기능 및 정보</div>
+          <ul class="card-features">
+            <li>본인 및 배우자 나이 입력</li>
+            <li>총자산 및 대출/전세보증금 총액 입력</li>
+            <li>월 총소득 및 월 총지출 일괄 입력</li>
+            <li>안전 기준 설정 및 안심 판정 결과</li>
+            <li class="dim">자산 추이 상세 선 그래프</li>
+            <li class="dim">소득/지출 항목별 물가 연동 지정</li>
+            <li class="dim">미래 자산 매각 및 일시금 이벤트</li>
+          </ul>
+          <a href="sim_v8.html" class="card-cta">1단계 무료 시작하기</a>
+        </div>
+
+        <!-- Level 2 Card (Featured) -->
+        <div class="level-card featured">
+          <div class="card-meta">
+            <span class="card-level-num">LEVEL 2</span>
+            <span class="card-badge-proof">인기 ★★★</span>
+          </div>
+          <h3 class="card-title">2~3분 정밀 진단</h3>
+          <p class="card-desc">자산을 5대 분류로 나누고, 소득과 지출을 개별 항목화하여 매년 오르는 연금 가치를 정밀하게 반영합니다.</p>
+          <div class="card-feature-title">제공 기능 및 정보</div>
+          <ul class="card-features">
+            <li>1단계 기본 정보 입력 포함</li>
+            <li>자산 5가지 종류별 구분 입력</li>
+            <li>소득/지출 항목별 물가연동(📈) 토글</li>
+            <li>물가상승률(2.0%~3.5%) 시나리오 선택</li>
+            <li>연도별 자산 추이 선 그래프 제공</li>
+            <li class="dim">미래 자산 매각 및 일시금 이벤트</li>
+            <li class="dim">의료비 자동 증가 및 고급 변수 수정</li>
+          </ul>
+          <a href="sim_v8.html" class="card-cta">2단계 무료 시작하기</a>
+        </div>
+
+        <!-- Level 3 Card -->
+        <div class="level-card">
+          <div class="card-meta">
+            <span class="card-level-num">LEVEL 3</span>
+            <span class="card-badge-free">최고 정밀도</span>
+          </div>
+          <h3 class="card-title">심층 시뮬레이션</h3>
+          <p class="card-desc">보유 부동산의 임대료/이자를 추적하고, 미래 매각 시점 및 이벤트 계획까지 결합한 종합 자산 솔루션입니다.</p>
+          <div class="card-feature-title">제공 기능 및 정보</div>
+          <ul class="card-features">
+            <li>1·2단계 기본 정보 및 세분화 포함</li>
+            <li><strong>개별 부동산 상세 카드 등록</strong></li>
+            <li><strong>미래 이벤트 설계 (부동산 매각, 목돈 입출금)</strong></li>
+            <li>의료비 고령기 자동 증가(75세/85세)</li>
+            <li>자산수익률 및 부동산상승률 상세 조정</li>
+            <li>이벤트가 반영된 계단식 자산 추이 그래프</li>
+            <li>상세 입력 데이터 요약 통합 모달</li>
+          </ul>
+          <a href="sim_v8.html" class="card-cta">3단계 무료 시작하기</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Trust Features Section (Gudokpin style) -->
+  <section class="trust-section" id="trust">
+    <div class="container">
+      <div class="trust-grid">
+        <div class="trust-item">
+          <div class="trust-icon-box">🔒</div>
+          <h3>개인정보 100% 안전 보장</h3>
+          <p>
+            회원가입과 인증이 필요 없습니다. 입력하신 소중한 자산 데이터는 외부 서버로 전송되지 않으며, 오직 사용자의 기기 브라우저(LocalStorage)에만 안전하게 보관됩니다.
+          </p>
+        </div>
+        <div class="trust-item">
+          <div class="trust-icon-box">📈</div>
+          <h3>공인 국가 표준 데이터 기반</h3>
+          <p>
+            한국은행의 물가안정목표(연 2.0%), 국민연금법상 물가변동률 보정 규칙, 통계청 국민생명표(평균 기대수명 및 안전 기준치)를 공식 모델링하여 정밀한 산출 공식을 제공합니다.
+          </p>
+        </div>
+        <div class="trust-item">
+          <div class="trust-icon-box">👵</div>
+          <h3>시니어 최적화 직관 UI</h3>
+          <p>
+            돋보기가 필요 없는 큰 글씨(기본 15px 이상), 복잡한 타이핑을 덜어주는 수치 칩 선택 방식, 귀여운 부엉이의 1:1 대화형 안내를 제공하여 스마트폰 사용이 낯선 분도 쉽게 조작합니다.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ Section -->
+  <section class="faq-section" id="faq">
+    <div class="container">
+      <div class="section-title">
+        <h2>자주 묻는 질문</h2>
+        <p>은퇴 시뮬레이터를 이용하시기 전 궁금한 점을 해결해 드립니다.</p>
+      </div>
+
+      <div class="faq-list">
+        <!-- FAQ 1 -->
+        <div class="faq-item">
+          <div class="faq-question">
+            <span>Q1. 은퇴 자산 진단 서비스는 유료인가요?</span>
+            <span class="faq-icon">+</span>
+          </div>
+          <div class="faq-answer">
+            은퇴연구소의 시뮬레이터 서비스(1단계, 2단계, 3단계)는 **100% 무료**로 제공됩니다. 광고 노출을 최소화하여 시니어 세대가 편안하게 노후를 가늠해 보실 수 있도록 기획되었습니다.
+          </div>
+        </div>
+
+        <!-- FAQ 2 -->
+        <div class="faq-item">
+          <div class="faq-question">
+            <span>Q2. 제가 입력한 자산과 부채 정보가 해킹되거나 노출될 염려는 없나요?</span>
+            <span class="faq-icon">+</span>
+          </div>
+          <div class="faq-answer">
+            본 서비스는 **서버가 없는 순수 브라우저 연동 방식**입니다. 사용자가 입력한 자산 규모, 나이, 부채는 개발사나 외부 데이터베이스에 일절 전송되지 않으며, 사용자 브라우저의 내부 저장소(`localStorage`)에 격리 저장됩니다. 개인정보 수집 행위가 차단되어 안심하고 이용하셔도 됩니다.
+          </div>
+        </div>
+
+        <!-- FAQ 3 -->
+        <div class="faq-item">
+          <div class="faq-question">
+            <span>Q3. 전세보증금도 부채로 입력해야 하나요?</span>
+            <span class="faq-icon">+</span>
+          </div>
+          <div class="faq-answer">
+            네, 그렇습니다. 세입자에게 언젠가 돌려줘야 할 전세보증금은 은퇴 시점에 반드시 갚아야 할 **'부채'**로 분류해야 미래의 여유자금이 과대계산되는 오류를 막을 수 있습니다. 1단계 부채란 또는 3단계 부동산 카드에 보증금 규모를 꼭 기재해 주세요.
+          </div>
+        </div>
+
+        <!-- FAQ 4 -->
+        <div class="faq-item">
+          <div class="faq-question">
+            <span>Q4. 1단계 결과에는 왜 그래프가 안 나오나요?</span>
+            <span class="faq-icon">+</span>
+          </div>
+          <div class="faq-answer">
+            1단계(초간단 진단)는 사용자의 자산 세부 구조(부동산 비율, 주식 여부 등)와 개별 연금 가치를 모른 채 대략적인 평균 비율로 연산하므로, 긴 기간의 연도별 자산 변동 그래프를 제공할 경우 정보 오해 소지가 큽니다. 보다 정확한 흐름을 차트로 보시려면 **2단계(정밀) 또는 3단계(심층)**로 이어서 진단하시길 적극 권장합니다.
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-top">
+        <div class="footer-logo">🦉 은퇴연구소</div>
+        <div class="footer-links">
+          <a href="#levels">단계별 비교</a>
+          <a href="#trust">신뢰성 기준</a>
+          <a href="#faq">FAQ</a>
+        </div>
+      </div>
+      <div class="footer-info">
+        <p>본 노후 시뮬레이터 프로그램은 개인의 안정적인 노후 설계를 돕기 위해 은퇴연구소에서 무료로 제공하는 웹 도구입니다.</p>
+        <p>© 2026 은퇴연구소. All Rights Reserved.</p>
+      </div>
+      <div class="footer-disclaimer">
+        ⚠️ <strong>면책 고지</strong>: 본 시뮬레이션 결과는 사용자가 입력한 통계적 기대치에 기초한 예측이며, 미래의 투자 수익률, 세법(양도소득세/상속세) 변동, 건강보험 제도 개편에 따라 실제 결과와 차이가 발생할 수 있습니다. 큰 재무 결정 전에는 반드시 세무사, 자산관리 전문가 등과 개별 상담을 진행하시길 권장합니다.
+      </div>
+    </div>
+  </footer>
+
+  <!-- FAQ Accordion JS -->
+  <script>
+    document.querySelectorAll('.faq-question').forEach(question => {
+      question.addEventListener('click', () => {
+        const item = question.parentElement;
+        const isActive = item.classList.contains('active');
+        
+        // Close all items
+        document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('active'));
+        
+        // Toggle current item
+        if (!isActive) {
+          item.classList.add('active');
+        }
+      });
+    });
+  </script>
+</body>
+</html>

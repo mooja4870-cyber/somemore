@@ -1920,18 +1920,112 @@ function simulate() {
         });
       }
     }
+    incomeAdj.forEach(adj => { if (yearOffset >= adj.from) monthlyInc += adj.delta; });
+
+    let monthlyExp = 0;
+    if (state.resultLevel === 1) {
+      monthlyExp = (state.monthlyExpense || 0) * Math.pow(inflFactor, yearOffset);
+    } else {
+      state.expenses.forEach(exp => {
+        if (useProps && exp.name === '대출이자') return; // 3단계에서는 부동산에서 처리
+        const mult = exp.growsWithInflation ? Math.pow(inflFactor, yearOffset) : 1;
+        let amt = (exp.amount || 0) * mult;
+        if (state.medicalGrowth && exp.name && exp.name.includes('의료')) {
+          if (age >= 75) amt *= 1 + (age - 75) * 0.12;
+          if (age >= 85) amt *= 1.5;
+        }
+        monthlyExp += amt;
+      });
+      // 3단계: 활성 부동산의 월 이자만 합산
+      if (useProps) {
+        activeProps.forEach(i => {
+          monthlyExp += state.properties[i].monthlyInterest || 0;
+        });
+      }
+    }
+    expenseAdj.forEach(adj => { if (yearOffset >= adj.from) monthlyExp += adj.delta; });
+
+    const annualNet = (monthlyInc - monthlyExp) * 12;
+    cash += annualNet;
+
+    // 일시 이벤트 처리
+    lumpEvents.forEach(ev => { if (ev.atYear === yearOffset) cash += ev.amount; });
+
+    // 부동산 매각 이벤트 처리
+    sellEvents.forEach(ev => {
+      if (ev.atYear === yearOffset && activeProps.has(ev.propIdx)) {
+        // 현금화: 평가액 - 대출 - 전세보증금
+        const netProceeds = (propVals[ev.propIdx] || 0) - (propLoans[ev.propIdx] || 0) - (propDeposits[ev.propIdx] || 0);
+        cash += netProceeds;
+        // 평가액·부채 제거
+        propVals[ev.propIdx] = 0;
+        propLoans[ev.propIdx] = 0;
+        propDeposits[ev.propIdx] = 0;
+        activeProps.delete(ev.propIdx);
+      }
+    });
+
+    // 현금 운용 수익 / 부동산 가격 상승
+    if (cash > 0) cash *= (1 + cashRet);
+    if (useProps) {
+      activeProps.forEach(i => { propVals[i] *= (1 + reRet); });
+    } else {
+      realEstate *= (1 + reRet);
+    }
+
+    // 총자산 계산
+    let total;
+    if (useProps) {
+      const reSum = propVals.reduce((s, v) => s + v, 0);
+      const debtSum = propLoans.reduce((s, v) => s + v, 0) + propDeposits.reduce((s, v) => s + v, 0);
+      total = cash + reSum - debtSum;
+    } else {
+      total = cash + realEstate - debt;
+    }
+    years.push(age);
+    totals.push(Math.round(total));
+    yearOffset++;
+  }
+  return { years, totals };
+}
+
+// ============ RESULT ============
+let chartInstance;
+
+async function renderResult() {
+  state.level = 'result';
+  updateProgress('result');
+  clearMain();
+  const main = document.getElementById('main');
+
+  await showMessages(['계산 끝났어요! 🦉 결과를 보여드릴게요...'], main);
+
+  const data = simulate();
+  const targetIdx = data.years.indexOf(state.safetyAge);
+  const assetAtSafety = targetIdx >= 0 ? data.totals[targetIdx] : data.totals[data.totals.length - 1];
+
+  // 안전 기준 금액의 인플레 환산
+  // state.safetyAmount는 "현재 가치(real) 기준" → 미래 시점에서 비교하려면 인플레로 환산해야
+  const yearsToSafety = Math.max(state.safetyAge - state.myAge, 1);
+  const inflMult = Math.pow(1 + state.inflation / 100, yearsToSafety);
+  const safetyAmountNominal = state.safetyAmount * inflMult;  // 미래 시점 명목값
+  // 결과 자산(명목)을 현재가치로 역환산 (비교/표시용)
+  const assetAtSafetyReal = assetAtSafety / inflMult;
+
+  const safe = assetAtSafety >= safetyAmountNominal;
+  const halfSafe = assetAtSafety >= 0;
+  const netMonth = (state.monthlyIncome || 0) - (state.monthlyExpense || 0);
+
+  const result = document.createElement('div');
+  result.className = 'result-screen';
+
+  let verdictClass = 'verdict', verdictIcon = '✓', verdictHeadline, verdictDetail;
+  let calloutHeadline, calloutSub, showCallout = false;
+
   // "얼마까지 더 써도 되는가" — 안전 여유분으로부터 역산 (모두 현재가치 기준)
   const surplusReal = assetAtSafetyReal - state.safetyAmount;
   // 월 추가 가능 금액도 현재 가치 기준 (사용자가 직관적으로 이해)
   const extraMonthly = surplusReal > 0 ? Math.round(surplusReal / (yearsToSafety * 12)) : 0;
-
-  const chartHTML = state.resultLevel > 1
-    ? `<div class="chart-card">
-        <div class="chart-title">자산 추이 시뮬레이션</div>
-        <div class="chart-sub">${state.myAge}세 → ${data.years[data.years.length-1]}세까지 · <strong>명목가치 기준</strong> (안전선은 ${formatEok(state.safetyAmount)} 현재가치를 ${state.safetyAge}세 시점 명목 ${formatEok(safetyAmountNominal)}으로 환산한 값)</div>
-        <div class="chart-wrap"><canvas id="resultChart"></canvas></div>
-      </div>`
-    : '';
 
   if (safe) {
     verdictHeadline = `${state.safetyAge}세에 자산 <strong>${formatEok(assetAtSafety)}</strong> <span style="color: var(--ink-faint); font-size: 18px;">(현재가치 ${formatEok(assetAtSafetyReal)})</span> — 안전 기준 통과!`;
@@ -1999,7 +2093,13 @@ function simulate() {
         <div class="metric-sub">현재가치 ${formatEok(assetAtSafetyReal)} · 목표 ${formatEok(state.safetyAmount)}</div>
       </div>
     </div>
-    ${chartHTML}
+    ${state.resultLevel >= 2 ? `
+    <div class="chart-card">
+      <div class="chart-title">자산 추이 시뮬레이션</div>
+      <div class="chart-sub">${state.myAge}세 → ${data.years[data.years.length-1]}세까지 · <strong>명목가치 기준</strong> (안전선은 ${formatEok(state.safetyAmount)} 현재가치를 ${state.safetyAge}세 시점 명목 ${formatEok(safetyAmountNominal)}으로 환산한 값)</div>
+      <div class="chart-wrap"><canvas id="resultChart"></canvas></div>
+    </div>
+    ` : ''}
     ${level1Note}
     ${debtNote}
     <div style="text-align: center; margin: 8px 0 24px;">
@@ -2015,7 +2115,7 @@ function simulate() {
     </div>
   `;
   main.appendChild(result);
-  if (state.resultLevel > 1) {
+  if (state.resultLevel >= 2) {
     drawResultChart(data);
   }
 
