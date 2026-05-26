@@ -3,7 +3,7 @@ import streamlit.components.v1 as components
 
 # 페이지 설정
 st.set_page_config(
-    page_title="은퇴연구소 - 노후 자산 시뮬레이터",
+    page_title="SOMEMORE - 노후 자산 시뮬레이터",
     page_icon="🦉",
     layout="wide",
     initial_sidebar_state="collapsed"
