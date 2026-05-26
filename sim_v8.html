@@ -2133,33 +2133,54 @@ async function renderResult() {
   result.className = 'result-screen';
 
   let verdictClass = 'verdict', verdictIcon = '✓', verdictHeadline, verdictDetail;
-  let calloutHeadline, calloutSub, showCallout = false;
+  let calloutHeadline, calloutSub, showCallout = true;
 
   // "얼마까지 더 써도 되는가" — 안전 여유분으로부터 역산 (모두 현재가치 기준)
   const surplusReal = assetAtSafetyReal - state.safetyAmount;
-  // 월 추가 가능 금액도 현재 가치 기준 (사용자가 직관적으로 이해)
-  const extraMonthly = surplusReal > 0 ? Math.round(surplusReal / (yearsToSafety * 12)) : 0;
 
   if (safe) {
     verdictHeadline = `${state.safetyAge}세에 자산 <strong>${formatEok(assetAtSafety)}</strong> <span style="color: var(--ink-faint); font-size: 18px;">(현재가치 ${formatEok(assetAtSafetyReal)})</span> — 안전 기준 통과!`;
     verdictDetail = `목표 ${formatEok(state.safetyAmount)}(현재가치) ≈ ${formatEok(safetyAmountNominal)}(${state.safetyAge}세 명목) 대비 ${formatEok(surplusReal)} 여유. 지금 생활비로 충분히 노후를 보낼 수 있어요.`;
+    
+    // 월 추가 가능 금액도 현재 가치 기준 (사용자가 직관적으로 이해)
+    const extraMonthly = surplusReal > 0 ? Math.round(surplusReal / (yearsToSafety * 12)) : 0;
+    
     if (extraMonthly >= 10) {
-      showCallout = true;
       calloutHeadline = `여보, 우리 매달 <em>${extraMonthly}만원</em> 더 써도 괜찮대요 ~`;
       calloutSub = `${state.safetyAge}세 자산 ${formatEok(state.safetyAmount)}(현재가치 기준) 목표를 지키면서도, 지금 생활비에 더해 매달 <strong>오늘 화폐 기준 ${extraMonthly}만원</strong>을 더 누릴 여유가 있다는 뜻이에요. (단순 근사치)`;
     } else {
-      showCallout = true;
       calloutHeadline = `여보, 우리 <em>지금처럼</em> 살아도 안전해요 ~`;
       calloutSub = `더 많이 쓸 여유는 빠듯하지만, 현재 지출 수준에선 ${state.safetyAge}세 목표 ${formatEok(state.safetyAmount)}(현재가치)를 지킬 수 있어요.`;
     }
-  } else if (halfSafe) {
-    verdictClass = 'verdict warn'; verdictIcon = '⚠';
-    verdictHeadline = `${state.safetyAge}세에 자산 <strong>${formatEok(assetAtSafety)}</strong> <span style="color: var(--ink-faint); font-size: 18px;">(현재가치 ${formatEok(assetAtSafetyReal)})</span> — 안전선 미달`;
-    verdictDetail = `자산이 소진되진 않지만 보수 기준 ${formatEok(state.safetyAmount)}(현재가치) ≈ ${formatEok(safetyAmountNominal)}(명목)에는 모자라요. 생활비를 조금 줄이거나 자산 구조를 점검할 필요가 있어요.`;
   } else {
-    verdictClass = 'verdict danger'; verdictIcon = '✕';
-    verdictHeadline = `${state.safetyAge}세 전에 <strong>자산 소진</strong> 위험`;
-    verdictDetail = `현재 지출 수준으로는 자산이 부족할 수 있어요. 지출을 줄이거나, 더 자세히 분석해서 해결책을 찾아봐요.`;
+    const deficitReal = Math.abs(surplusReal);
+    const deficitMonthly = Math.round(deficitReal / (yearsToSafety * 12));
+
+    if (halfSafe) {
+      verdictClass = 'verdict warn'; verdictIcon = '⚠';
+      verdictHeadline = `${state.safetyAge}세에 자산 <strong>${formatEok(assetAtSafety)}</strong> <span style="color: var(--ink-faint); font-size: 18px;">(현재가치 ${formatEok(assetAtSafetyReal)})</span> — 안전선 미달`;
+      verdictDetail = `자산이 소진되진 않지만 보수 기준 ${formatEok(state.safetyAmount)}(현재가치) ≈ ${formatEok(safetyAmountNominal)}(명목)에는 모자라요. 생활비를 조금 줄이거나 자산 구조를 점검할 필요가 있어요.`;
+      
+      if (deficitMonthly >= 1) {
+        calloutHeadline = `여보, 우리 매달 생활비 <em>${deficitMonthly}만원</em>만 더 아끼면 안전하대요 ~`;
+        calloutSub = `${state.safetyAge}세 자산 ${formatEok(state.safetyAmount)}(현재가치 기준) 목표를 달성하려면, 지금보다 매달 <strong>오늘 화폐 기준 ${deficitMonthly}만원</strong>을 아끼거나 추가 저축이 필요하다는 뜻이에요.`;
+      } else {
+        calloutHeadline = `여보, 우리 생활비를 <em>조금만 더</em> 아끼면 안전하대요 ~`;
+        calloutSub = `${state.safetyAge}세 자산 ${formatEok(state.safetyAmount)}(현재가치 기준) 목표에 아깝게 약간 부족한 수준이에요. 매달 약간의 추가 저축이나 지출 절감으로 안심할 수 있어요.`;
+      }
+    } else {
+      verdictClass = 'verdict danger'; verdictIcon = '✕';
+      verdictHeadline = `${state.safetyAge}세 전에 <strong>자산 소진</strong> 위험`;
+      verdictDetail = `현재 지출 수준으로는 자산이 부족할 수 있어요. 지출을 줄이거나, 더 자세히 분석해서 해결책을 찾아봐요.`;
+      
+      if (deficitMonthly >= 1) {
+        calloutHeadline = `여보, 우리 매달 생활비 <em>${deficitMonthly}만원</em> 줄여야 안전하대요 ~`;
+        calloutSub = `현재 자산과 소득으로는 노후 자금 소진 위험이 있어요. ${state.safetyAge}세 목표를 지키며 안전하게 보내려면, 매달 <strong>오늘 화폐 기준 ${deficitMonthly}만원</strong>을 줄이는 지출 관리가 필요하다는 뜻이에요.`;
+      } else {
+        calloutHeadline = `여보, 우리 생활비를 <em>조금 더</em> 줄여야 안전하대요 ~`;
+        calloutSub = `현재 자산과 소득 수준으로는 노후 자금이 조기에 소진될 위험이 있어요. ${state.safetyAge}세 시점의 안정적인 노후 목표 달성을 위해 지출 조절이 필요합니다.`;
+      }
+    }
   }
 
   // 1단계 가정 주석
