@@ -15,6 +15,11 @@ st.markdown("""
     #MainMenu {visibility: hidden;}
     footer {visibility: hidden;}
     header {visibility: hidden;}
+    html, body, [data-testid="stAppViewContainer"], .main {
+        overflow: hidden !important;
+        margin: 0px !important;
+        padding: 0px !important;
+    }
     .block-container {
         padding: 0px !important;
         margin: 0px !important;
@@ -60,8 +65,7 @@ else:
     html = html.replace('href="sim_v8.html"', 'href="/?page=sim"')
     html = html.replace('href="index.html"', 'href="/"')
 
-# 전체 화면 스크롤이 가능하도록 높이를 넉넉히 잡고 HTML 렌더링
-# 랜딩 페이지는 2200px, 시뮬레이터는 1400px 수준으로 유동적 설정
-frame_height = 2200 if page != "sim" else 1400
+# 아이프레임 내부 스크롤 및 앵커 링크 작동이 가능하도록 콤팩트한 높이로 설정
+frame_height = 850
 
 components.html(html, height=frame_height, scrolling=True)
