@@ -2779,10 +2779,22 @@ document.addEventListener('click', (e) => {
   if (link) {
     e.preventDefault();
     const dest = link.getAttribute('href');
+    
+    let parentOrigin = window.location.origin;
+    if (document.referrer) {
+      try {
+        const refUrl = new URL(document.referrer);
+        parentOrigin = refUrl.origin;
+      } catch (err) {
+        // ignore
+      }
+    }
+    const absoluteDest = new URL(dest, parentOrigin).href;
+    
     try {
-      window.parent.location.href = dest;
+      window.parent.location.href = absoluteDest;
     } catch (err) {
-      window.location.href = dest;
+      window.location.href = absoluteDest;
     }
   }
 });
