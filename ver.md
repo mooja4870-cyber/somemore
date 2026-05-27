@@ -337,3 +337,21 @@
 ### 변경 통계
 - `sim_v8.html`: +55 / -94 lines
 
+---
+
+## v10 — 2026-05-27
+
+**Streamlit iframe 샌드박스 네비게이션 제약 회피 (srcdoc 적용).**
+
+### 문제 인식
+기존 `app.py`에서 `components.html()`을 사용하여 렌더링한 iframe은 Streamlit의 보안 정책으로 인해 `allow-top-navigation` 속성이 제외된 상태로 생성되었습니다. 이로 인해 랜딩 페이지(`index.html`) 내의 1~3단계 시작 버튼이나 헤더의 시뮬레이터 링크(`target="_parent"`)를 클릭해도 브라우저 보안에 의해 최상위(Parent) 창 리다이렉트가 차단되어 무반응(클릭 불량) 상태가 지속되었습니다.
+
+### 변경 사항
+- **app.py 렌더링 방식 변경**:
+  - `components.html()` 대신 파이썬의 `html.escape`를 활용하여 원본 HTML 문자열을 인코딩하고, 커스텀 `<iframe>` 태그의 `srcdoc` 속성으로 주입했습니다.
+  - 커스텀 iframe에는 `sandbox="allow-scripts allow-same-origin allow-top-navigation allow-top-navigation-by-user-activation allow-forms allow-popups"` 속성을 명시적으로 부여하여 부모 창(`target="_top"`)으로의 정상적인 네비게이션을 허용했습니다.
+- **index.html 임시 안전장치 스크립트 제거**:
+  - 기존에 억지로 iframe 네비게이션을 우회하려다 실제 정상적인 a태그 클릭(`e.preventDefault()`)까지 묶어버리던 `document.referrer` 기반의 Fail-safe 자바스크립트 블록을 완전히 삭제했습니다. 이제 순수 HTML 앵커 기능만으로 자연스럽게 작동합니다.
+
+### 검증
+- 초기 화면(index.html)에서 "1단계 무료 시작하기", 헤더 "시뮬레이터 시작" 등 외부 링크 클릭 시, iframe 내부가 아닌 Streamlit 최상단 주소가 `/?page=sim&startLevel=X`로 정상 갱신되며 페이지가 전환되는 것을 확인했습니다.

@@ -337,30 +337,7 @@
       showToast('마이페이지 서비스 준비 중입니다! 🦉');
     });
 
-    // Fail-safe parent redirection handler
-    document.querySelectorAll('a[target="_parent"]').forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        e.preventDefault();
-        const dest = btn.getAttribute('href');
-        
-        let parentOrigin = window.location.origin;
-        if (document.referrer) {
-          try {
-            const refUrl = new URL(document.referrer);
-            parentOrigin = refUrl.origin;
-          } catch (err) {
-            // ignore
-          }
-        }
-        const absoluteDest = new URL(dest, parentOrigin).href;
-        
-        try {
-          window.parent.location.href = absoluteDest;
-        } catch (err) {
-          window.location.href = absoluteDest;
-        }
-      });
-    });
+
   </script>
 </body>
 </html>

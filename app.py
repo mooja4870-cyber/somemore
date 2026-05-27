@@ -65,7 +65,12 @@ else:
     html = html.replace('href="sim_v8.html"', 'href="/?page=sim"')
     html = html.replace('href="index.html"', 'href="/"')
 
+import html as pyhtml
+
 # 아이프레임 내부 스크롤 및 앵커 링크 작동이 가능하도록 콤팩트한 높이로 설정
 frame_height = 850
 
-components.html(html, height=frame_height, scrolling=True)
+escaped_html = pyhtml.escape(html)
+iframe_html = f'<iframe srcdoc="{escaped_html}" width="100%" height="{frame_height}" frameborder="0" sandbox="allow-scripts allow-same-origin allow-top-navigation allow-top-navigation-by-user-activation allow-forms allow-popups"></iframe>'
+st.markdown(iframe_html, unsafe_allow_html=True)
+
