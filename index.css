@@ -428,6 +428,7 @@ a {
 }
 
 .card-cta {
+  display: block;
   width: 100%;
   padding: 14px;
   border-radius: 12px;

@@ -2773,6 +2773,20 @@ document.addEventListener('click', (e) => {
   }
 });
 
+// Fail-safe parent redirection handler
+document.addEventListener('click', (e) => {
+  const link = e.target.closest('a[target="_parent"]');
+  if (link) {
+    e.preventDefault();
+    const dest = link.getAttribute('href');
+    try {
+      window.parent.location.href = dest;
+    } catch (err) {
+      window.location.href = dest;
+    }
+  }
+});
+
 // ============ BOOTSTRAP: 저장된 state가 있으면 복원 안내 ============
 async function bootstrap() {
   const saved = loadState();

@@ -336,6 +336,19 @@
     document.getElementById('profileBtn').addEventListener('click', () => {
       showToast('마이페이지 서비스 준비 중입니다! 🦉');
     });
+
+    // Fail-safe parent redirection handler
+    document.querySelectorAll('a[target="_parent"]').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        const dest = btn.getAttribute('href');
+        try {
+          window.parent.location.href = dest;
+        } catch (err) {
+          window.location.href = dest;
+        }
+      });
+    });
   </script>
 </body>
 </html>
