@@ -2,6 +2,28 @@
 
 ---
 
+## v14 — 2026-06-04
+
+**헤더 장바구니 아이콘 삭제 + 시뮬레이터 시작 버튼 네비게이션 수정.**
+
+### 문제
+- 헤더 장바구니(🛒) 아이콘 불필요 — 삭제 요청
+- "시뮬레이터 시작" / 레벨 카드 CTA 클릭 시 페이지 이동 안 됨
+  - 원인: `components.html()` iframe 샌드박스에 `allow-top-navigation` 미포함 → `target="_parent"` 링크 차단
+
+### 변경 사항 (index.html)
+- 헤더 `<a id="cartLink">` 장바구니 SVG 아이콘 삭제
+- `cartLink` 관련 Toast JS 이벤트 리스너 삭제
+- `target="_parent"` 링크 전체에 클릭 인터셉터 추가
+  - `window.parent.location.href = url` 직접 할당 (same-origin 환경)
+  - 크로스 오리진 fallback: `window.top.location.href = url`
+  - `allow-same-origin` 샌드박스 권한 활용 → `allow-top-navigation` 없이도 동작
+
+### 변경 통계
+- `index.html`: +14 / −8 lines
+
+---
+
 ## v13 — 2026-06-04
 
 **랜딩페이지 내비게이션 수정 + FAQ 10개로 확장.**
