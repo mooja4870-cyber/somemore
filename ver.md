@@ -2,6 +2,21 @@
 
 ---
 
+## v16 — 2026-06-05
+
+**랜딩 페이지 히어로 섹션에 Android APK 다운로드 버튼 추가.**
+
+### 변경 사항
+- `index.html` 히어로 액션 버튼 영역에 "📱 앱 다운로드 (Android)" 버튼 추가
+  - `href`: GitHub raw APK URL, `download="CGT.apk"`, `target="_blank"`
+- `index.css` `.btn-apk` 스타일 추가 (녹색 계열, 호버 시 채워지는 효과)
+
+### 변경 통계
+- `index.html`: +6 / −0 lines
+- `index.css`: +13 / −0 lines
+
+---
+
 ## v15 — 2026-06-05
 
 **모든 화면 핀치 줌(두 손가락 확대/축소) 활성화.**
