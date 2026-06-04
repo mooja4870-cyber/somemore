@@ -1,5 +1,5 @@
 import streamlit as st
-import streamlit.components.v1 as components
+import html as pyhtml
 
 # 페이지 설정
 st.set_page_config(
@@ -9,29 +9,45 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-# Streamlit의 기본 여백, 메뉴, 푸터 등 레이아웃을 숨기고 아이프레임을 화면에 꽉 채우기 위한 CSS 인젝션
+# Streamlit UI 크롬 전체 숨김 + iframe이 뷰포트를 완전히 덮도록 CSS 인젝션
+# position:fixed 방식으로 Streamlit 컨테이너 구조에 무관하게 풀스크린 보장
 st.markdown("""
     <style>
-    #MainMenu {visibility: hidden;}
-    footer {visibility: hidden;}
-    header {visibility: hidden;}
-    html, body, [data-testid="stAppViewContainer"], .main {
+    /* Streamlit 기본 UI 숨김 */
+    #MainMenu {visibility: hidden !important;}
+    footer {visibility: hidden !important;}
+    header {visibility: hidden !important;}
+
+    /* 스크롤바 제거 */
+    html, body {
         overflow: hidden !important;
-        margin: 0px !important;
-        padding: 0px !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        height: 100% !important;
     }
-    .block-container {
-        padding: 0px !important;
-        margin: 0px !important;
+
+    /* Streamlit 컨테이너 여백 제거 */
+    [data-testid="stAppViewContainer"],
+    [data-testid="stAppViewBlockContainer"],
+    [data-testid="stVerticalBlock"],
+    [data-testid="stVerticalBlockBorderWrapper"],
+    .main, .block-container,
+    section.main > div {
+        padding: 0 !important;
+        margin: 0 !important;
+        max-width: 100% !important;
     }
-    iframe {
-        width: 100vw;
-        height: 100vh;
-        border: none;
-        display: block;
-    }
-    div[data-testid="stVerticalBlock"] > div {
-        padding: 0px !important;
+
+    /* iframe 풀스크린 오버레이 */
+    iframe#somemore-frame {
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+        width: 100vw !important;
+        height: 100vh !important;
+        border: none !important;
+        z-index: 9999 !important;
+        display: block !important;
     }
     </style>
 """, unsafe_allow_html=True)
@@ -43,34 +59,36 @@ page = query_params.get("page", "home")
 if page == "sim":
     # 시뮬레이터 로드
     with open("sim_v8.html", "r", encoding="utf-8") as f:
-        html = f.read()
+        html_content = f.read()
     # 쿼리 매개변수에서 startLevel 추출하여 시뮬레이터 내 let startLevelParam 변수와 결합
     start_level = query_params.get("startLevel", "null")
-    html = html.replace("let startLevelParam = null;", f"let startLevelParam = {start_level};")
+    html_content = html_content.replace("let startLevelParam = null;", f"let startLevelParam = {start_level};")
     # 시뮬레이터 내에서 홈으로 가는 링크가 있을 경우에 대비해 라우팅 경로 보정
-    html = html.replace('href="index.html"', 'href="/"')
+    html_content = html_content.replace('href="index.html"', 'href="/"')
 else:
     # 홈(랜딩 페이지) 로드
     with open("index.html", "r", encoding="utf-8") as f:
-        html = f.read()
+        html_content = f.read()
     with open("index.css", "r", encoding="utf-8") as f:
         css = f.read()
-    
+
     # index.html 내의 외부 스타일시트 링크를 인라인 스타일로 치환 (아이프레임 내에서 로드되도록)
-    html = html.replace('<link rel="stylesheet" href="index.css">', f'<style>{css}</style>')
+    html_content = html_content.replace('<link rel="stylesheet" href="index.css">', f'<style>{css}</style>')
     # 3단계 카드 및 시작 버튼 링크를 Streamlit 쿼리 파라미터 링크로 치환
-    html = html.replace('href="sim_v8.html?startLevel=1"', 'href="/?page=sim&startLevel=1"')
-    html = html.replace('href="sim_v8.html?startLevel=2"', 'href="/?page=sim&startLevel=2"')
-    html = html.replace('href="sim_v8.html?startLevel=3"', 'href="/?page=sim&startLevel=3"')
-    html = html.replace('href="sim_v8.html"', 'href="/?page=sim"')
-    html = html.replace('href="index.html"', 'href="/"')
+    html_content = html_content.replace('href="sim_v8.html?startLevel=1"', 'href="/?page=sim&startLevel=1"')
+    html_content = html_content.replace('href="sim_v8.html?startLevel=2"', 'href="/?page=sim&startLevel=2"')
+    html_content = html_content.replace('href="sim_v8.html?startLevel=3"', 'href="/?page=sim&startLevel=3"')
+    html_content = html_content.replace('href="sim_v8.html"', 'href="/?page=sim"')
+    html_content = html_content.replace('href="index.html"', 'href="/"')
 
-import html as pyhtml
-
-# 아이프레임 내부 스크롤 및 앵커 링크 작동이 가능하도록 콤팩트한 높이로 설정
-frame_height = 850
-
-escaped_html = pyhtml.escape(html)
-iframe_html = f'<iframe srcdoc="{escaped_html}" width="100%" height="{frame_height}" frameborder="0" sandbox="allow-scripts allow-same-origin allow-top-navigation allow-top-navigation-by-user-activation allow-forms allow-popups"></iframe>'
+# srcdoc에 HTML을 이스케이프하여 주입
+# id="somemore-frame" 으로 CSS position:fixed 타겟팅
+escaped_html = pyhtml.escape(html_content)
+iframe_html = (
+    f'<iframe id="somemore-frame" srcdoc="{escaped_html}" '
+    f'frameborder="0" '
+    f'sandbox="allow-scripts allow-same-origin allow-top-navigation '
+    f'allow-top-navigation-by-user-activation allow-forms allow-popups">'
+    f'</iframe>'
+)
 st.markdown(iframe_html, unsafe_allow_html=True)
-

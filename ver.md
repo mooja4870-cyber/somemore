@@ -1,5 +1,30 @@
 # 🦉 노후 시뮬레이터 — 버전 이력
 
+---
+
+## v11 — 2026-06-04
+
+**Streamlit 풀스크린 iframe 깨짐 수정 — position:fixed 오버레이 방식으로 전환.**
+
+### 문제
+- `frame_height = 850` 고정값으로 화면 크기와 무관하게 850px만 표시 → 남는 공간/스크롤 발생
+- Streamlit 신버전에서 `[data-testid]` 셀렉터 일부 변경 → CSS 오버라이드 미적용
+- `overflow: hidden` 이 iframe 내부 스크롤까지 차단하는 부작용
+
+### 변경 사항 (app.py)
+- `frame_height = 850` 제거, HTML `height` 속성 제거
+- iframe에 `id="somemore-frame"` 추가
+- CSS를 `position: fixed; top:0; left:0; width:100vw; height:100vh; z-index:9999`로 교체
+  - Streamlit 컨테이너 구조(버전별 변동)에 완전히 무관하게 뷰포트 전체를 덮는 방식
+- CSS 셀렉터 확장: `stAppViewBlockContainer`, `stVerticalBlockBorderWrapper` 추가
+- `import html as pyhtml`을 파일 상단으로 이동 (코드 정리)
+- 변수명 `html` → `html_content` (내장 모듈 `html`과 충돌 방지)
+
+### 변경 통계
+- `app.py`: +20 / −15 lines
+
+---
+
 > "여보! 우리 생활비 좀 더 사용해도 된데 ~"  
 > 시니어 친화 노후자산 시뮬레이터 · 부엉이 가이드 · 3단계 점진적 입력
 
