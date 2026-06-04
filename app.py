@@ -1,5 +1,5 @@
 import streamlit as st
-import html as pyhtml
+import streamlit.components.v1 as components
 
 # 페이지 설정
 st.set_page_config(
@@ -9,8 +9,7 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-# Streamlit UI 크롬 전체 숨김 + iframe이 뷰포트를 완전히 덮도록 CSS 인젝션
-# position:fixed 방식으로 Streamlit 컨테이너 구조에 무관하게 풀스크린 보장
+# Streamlit UI 크롬 전체 숨김 CSS 인젝션
 st.markdown("""
     <style>
     /* Streamlit 기본 UI 숨김 */
@@ -38,8 +37,8 @@ st.markdown("""
         max-width: 100% !important;
     }
 
-    /* iframe 풀스크린 오버레이 */
-    iframe#somemore-frame {
+    /* components.html 이 생성하는 iframe 풀스크린 */
+    iframe {
         position: fixed !important;
         top: 0 !important;
         left: 0 !important;
@@ -72,7 +71,7 @@ else:
     with open("index.css", "r", encoding="utf-8") as f:
         css = f.read()
 
-    # index.html 내의 외부 스타일시트 링크를 인라인 스타일로 치환 (아이프레임 내에서 로드되도록)
+    # index.html 내의 외부 스타일시트 링크를 인라인 스타일로 치환
     html_content = html_content.replace('<link rel="stylesheet" href="index.css">', f'<style>{css}</style>')
     # 3단계 카드 및 시작 버튼 링크를 Streamlit 쿼리 파라미터 링크로 치환
     html_content = html_content.replace('href="sim_v8.html?startLevel=1"', 'href="/?page=sim&startLevel=1"')
@@ -81,14 +80,6 @@ else:
     html_content = html_content.replace('href="sim_v8.html"', 'href="/?page=sim"')
     html_content = html_content.replace('href="index.html"', 'href="/"')
 
-# srcdoc에 HTML을 이스케이프하여 주입
-# id="somemore-frame" 으로 CSS position:fixed 타겟팅
-escaped_html = pyhtml.escape(html_content)
-iframe_html = (
-    f'<iframe id="somemore-frame" srcdoc="{escaped_html}" '
-    f'frameborder="0" '
-    f'sandbox="allow-scripts allow-same-origin allow-top-navigation '
-    f'allow-top-navigation-by-user-activation allow-forms allow-popups">'
-    f'</iframe>'
-)
-st.markdown(iframe_html, unsafe_allow_html=True)
+# ✅ st.markdown + srcdoc 방식 대신 components.html 직접 주입
+# → HTML 이스케이프 없이 브라우저가 바로 렌더링 (깨짐 완전 방지)
+components.html(html_content, height=900, scrolling=True)

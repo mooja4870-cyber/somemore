@@ -2,6 +2,25 @@
 
 ---
 
+## v12 — 2026-06-04
+
+**HTML 깨짐(이스케이프 텍스트 노출) 완전 수정 — srcdoc 방식 → components.html() 전환.**
+
+### 문제
+- `app.py`에서 `pyhtml.escape(html_content)`로 HTML을 이스케이프 후 `srcdoc` 속성에 주입 → `st.markdown(..., unsafe_allow_html=True)`이 `srcdoc` 속성 자체를 내부 sanitize 처리함
+- 결과: `&lt;` `&gt;` `&quot;` `&#x27;` 등 이스케이프 텍스트가 화면에 그대로 노출 (HTML 깨짐)
+
+### 변경 사항 (app.py)
+- `import html as pyhtml` 제거
+- `import streamlit.components.v1 as components` 추가
+- `pyhtml.escape()` + `st.markdown(iframe_html)` 방식 → `components.html(html_content, ...)` 로 교체
+- `srcdoc` 전용 CSS (`iframe#somemore-frame`) → `iframe` 전체 선택자로 변경 (components가 생성하는 iframe 타겟)
+
+### 변경 통계
+- `app.py`: +3 / −8 lines
+
+---
+
 ## v11 — 2026-06-04
 
 **Streamlit 풀스크린 iframe 깨짐 수정 — position:fixed 오버레이 방식으로 전환.**
