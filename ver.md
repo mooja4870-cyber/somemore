@@ -2,6 +2,20 @@
 
 ---
 
+## v15 — 2026-06-05
+
+**모든 화면 핀치 줌(두 손가락 확대/축소) 활성화.**
+
+### 변경 사항
+- `index.html` viewport 메타태그: `user-scalable=yes, minimum-scale=0.5, maximum-scale=5.0` 추가
+- `sim_v8.html` viewport 메타태그: 동일하게 추가
+
+### 변경 통계
+- `index.html`: +1 / −1 lines
+- `sim_v8.html`: +1 / −1 lines
+
+---
+
 ## v14 — 2026-06-04
 
 **헤더 장바구니 아이콘 삭제 + 시뮬레이터 시작 버튼 네비게이션 수정.**
