@@ -2,6 +2,37 @@
 
 ---
 
+## v13 — 2026-06-04
+
+**랜딩페이지 내비게이션 수정 + FAQ 10개로 확장.**
+
+### 문제
+- 헤더 내비 링크 (단계별 비교, 신뢰성 기준, 자주 묻는 질문) 앵커 클릭 시 스크롤 이동 안 됨
+- 시뮬레이터 시작 링크가 `sim_v8.html?startLevel=1`(파일 경로) → Streamlit에서 404
+- FAQ 항목이 4개로 부족
+
+### 변경 사항 (index.html)
+- `href="sim_v8.html?..."` → `href="/?page=sim&startLevel=..."` 로 전체 교체 (헤더 nav, 히어로 버튼, 레벨 카드 CTA 모두)
+- `href="index.html"` → `href="/"` 로 교체
+- `scroll-link` 클래스 + JS `scrollIntoView({ behavior: 'smooth' })` 추가 → 앵커 부드럽게 이동
+- `scroll-margin-top: 90px` CSS 추가 → 헤더에 가려지지 않도록 오프셋
+- `html { scroll-behavior: smooth }` 추가
+- **FAQ 4개 → 10개로 확장**
+  - Q5: 단계 올릴 때 재입력 불필요
+  - Q6: 국민연금 소득 입력 방법
+  - Q7: 결과 저장/공유 방법
+  - Q8: 물가상승률 권장 설정
+  - Q9: 배우자 나이 차이 입력 방법
+  - Q10: 안전 기준 나이/금액 설정 방법
+- FAQ 답변 내 `**굵은글씨**` → `<strong>` 태그로 교체 (HTML 마크다운 미지원)
+- 푸터 링크에도 `scroll-link` 클래스 적용
+- Toast JS 코드 정리 (`timeoutId` → `_tid`)
+
+### 변경 통계
+- `index.html`: +80 / −30 lines
+
+---
+
 ## v12 — 2026-06-04
 
 **HTML 깨짐(이스케이프 텍스트 노출) 완전 수정 — srcdoc 방식 → components.html() 전환.**

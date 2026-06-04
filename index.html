@@ -5,28 +5,40 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>🦉 SOMEMORE - 노후 자산 시뮬레이터</title>
   <meta name="description" content="여보! 우리 은퇴 후에 생활비 좀 더 써도 된대요 ~ 30초만에 확인하는 노후 자산 시뮬레이션">
-  
+
   <!-- Open Graph -->
   <meta property="og:title" content="SOMEMORE - 노후 자산 시뮬레이터" />
   <meta property="og:description" content="여보, 우리 은퇴 후에 생활비 좀 더 써도 된대요 ~ 30초만에 확인하는 안심 노후 설계" />
   <meta property="og:type" content="website" />
-  
+
   <link rel="stylesheet" href="index.css">
+  <style>
+    /* 앵커 이동 시 헤더 높이만큼 여백 확보 */
+    html {
+      scroll-behavior: smooth;
+    }
+    :target {
+      scroll-margin-top: 90px;
+    }
+    #levels, #trust, #faq {
+      scroll-margin-top: 90px;
+    }
+  </style>
 </head>
 <body>
 
   <!-- Header -->
   <header class="header">
     <div class="container" style="width: 100%; display: flex; justify-content: space-between; align-items: center; max-width: 1120px;">
-      <a href="index.html" class="logo-group" target="_parent">
+      <a href="/" class="logo-group" target="_parent">
         <span class="logo-owl">🦉</span>
         <span>SOMEMORE</span>
       </a>
       <nav class="nav-links" style="margin-left: auto; margin-right: 30px;">
-        <a href="sim_v8.html?startLevel=1" class="nav-link" target="_parent">시뮬레이터 시작</a>
-        <a href="#levels" class="nav-link">단계별 비교</a>
-        <a href="#trust" class="nav-link">신뢰성 기준</a>
-        <a href="#faq" class="nav-link">자주 묻는 질문</a>
+        <a href="/?page=sim&startLevel=1" class="nav-link" target="_parent">시뮬레이터 시작</a>
+        <a href="#levels" class="nav-link scroll-link">단계별 비교</a>
+        <a href="#trust" class="nav-link scroll-link">신뢰성 기준</a>
+        <a href="#faq" class="nav-link scroll-link">자주 묻는 질문</a>
       </nav>
       <div style="display: flex; align-items: center; gap: 20px;">
         <a href="#" id="cartLink" style="color: var(--ink-dim); display: flex; align-items: center;" aria-label="장바구니">
@@ -54,11 +66,11 @@
         막연한 노후 자산 고갈 공포에서 벗어나세요. 국민연금 물가상승 보정법과 생애 주기별 의료비 통계를 적용한 공인 기준 시뮬레이터로 배우자와 나를 위한 안심 생활비 규모를 확인해 보세요.
       </p>
       <div class="hero-actions">
-        <a href="sim_v8.html?startLevel=1" class="btn-large btn-primary" target="_parent">
+        <a href="/?page=sim&startLevel=1" class="btn-large btn-primary" target="_parent">
           <span>30초 무료 진단 시작하기</span>
           <span>⚡</span>
         </a>
-        <a href="#levels" class="btn-large btn-secondary">단계별 비교 보기</a>
+        <a href="#levels" class="btn-large btn-secondary scroll-link">단계별 비교 보기</a>
       </div>
 
       <!-- Owl Assistant Illustration -->
@@ -88,7 +100,7 @@
     </div>
   </section>
 
-  <!-- Level Selection Cards (Gudokpin style) -->
+  <!-- Level Selection Cards -->
   <section class="levels-section" id="levels" style="padding: 60px 0;">
     <div class="container">
       <div class="section-title">
@@ -115,7 +127,7 @@
             <li class="dim">소득/지출 항목별 물가 연동 지정</li>
             <li class="dim">미래 자산 매각 및 일시금 이벤트</li>
           </ul>
-          <a href="sim_v8.html?startLevel=1" class="card-cta" target="_parent">1단계 무료 시작하기</a>
+          <a href="/?page=sim&startLevel=1" class="card-cta" target="_parent">1단계 무료 시작하기</a>
         </div>
 
         <!-- Level 2 Card (Featured) -->
@@ -136,7 +148,7 @@
             <li class="dim">미래 자산 매각 및 일시금 이벤트</li>
             <li class="dim">의료비 자동 증가 및 고급 변수 수정</li>
           </ul>
-          <a href="sim_v8.html?startLevel=2" class="card-cta" target="_parent">2단계 무료 시작하기</a>
+          <a href="/?page=sim&startLevel=2" class="card-cta" target="_parent">2단계 무료 시작하기</a>
         </div>
 
         <!-- Level 3 Card -->
@@ -157,13 +169,13 @@
             <li>이벤트가 반영된 계단식 자산 추이 그래프</li>
             <li>상세 입력 데이터 요약 통합 모달</li>
           </ul>
-          <a href="sim_v8.html?startLevel=3" class="card-cta" target="_parent">3단계 무료 시작하기</a>
+          <a href="/?page=sim&startLevel=3" class="card-cta" target="_parent">3단계 무료 시작하기</a>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- Trust Features Section (Gudokpin style) -->
+  <!-- Trust Features Section -->
   <section class="trust-section" id="trust">
     <div class="container">
       <div class="trust-grid">
@@ -201,6 +213,7 @@
       </div>
 
       <div class="faq-list">
+
         <!-- FAQ 1 -->
         <div class="faq-item">
           <div class="faq-question">
@@ -208,7 +221,7 @@
             <span class="faq-icon">+</span>
           </div>
           <div class="faq-answer">
-            SOMEMORE의 시뮬레이터 서비스(1단계, 2단계, 3단계)는 **100% 무료**로 제공됩니다. 광고 노출을 최소화하여 시니어 세대가 편안하게 노후를 가늠해 보실 수 있도록 기획되었습니다.
+            SOMEMORE의 시뮬레이터 서비스(1단계, 2단계, 3단계)는 <strong>100% 무료</strong>로 제공됩니다. 광고 노출을 최소화하여 시니어 세대가 편안하게 노후를 가늠해 보실 수 있도록 기획되었습니다.
           </div>
         </div>
 
@@ -219,7 +232,7 @@
             <span class="faq-icon">+</span>
           </div>
           <div class="faq-answer">
-            본 서비스는 **서버가 없는 순수 브라우저 연동 방식**입니다. 사용자가 입력한 자산 규모, 나이, 부채는 개발사나 외부 데이터베이스에 일절 전송되지 않으며, 사용자 브라우저의 내부 저장소(`localStorage`)에 격리 저장됩니다. 개인정보 수집 행위가 차단되어 안심하고 이용하셔도 됩니다.
+            본 서비스는 <strong>서버가 없는 순수 브라우저 연동 방식</strong>입니다. 사용자가 입력한 자산 규모, 나이, 부채는 개발사나 외부 데이터베이스에 일절 전송되지 않으며, 사용자 브라우저의 내부 저장소(localStorage)에 격리 저장됩니다. 개인정보 수집 행위가 차단되어 안심하고 이용하셔도 됩니다.
           </div>
         </div>
 
@@ -230,7 +243,7 @@
             <span class="faq-icon">+</span>
           </div>
           <div class="faq-answer">
-            네, 그렇습니다. 세입자에게 언젠가 돌려줘야 할 전세보증금은 은퇴 시점에 반드시 갚아야 할 **'부채'**로 분류해야 미래의 여유자금이 과대계산되는 오류를 막을 수 있습니다. 1단계 부채란 또는 3단계 부동산 카드에 보증금 규모를 꼭 기재해 주세요.
+            네, 그렇습니다. 세입자에게 언젠가 돌려줘야 할 전세보증금은 은퇴 시점에 반드시 갚아야 할 <strong>'부채'</strong>로 분류해야 미래의 여유자금이 과대계산되는 오류를 막을 수 있습니다. 1단계 부채란 또는 3단계 부동산 카드에 보증금 규모를 꼭 기재해 주세요.
           </div>
         </div>
 
@@ -241,9 +254,76 @@
             <span class="faq-icon">+</span>
           </div>
           <div class="faq-answer">
-            1단계(초간단 진단)는 사용자의 자산 세부 구조(부동산 비율, 주식 여부 등)와 개별 연금 가치를 모른 채 대략적인 평균 비율로 연산하므로, 긴 기간의 연도별 자산 변동 그래프를 제공할 경우 정보 오해 소지가 큽니다. 보다 정확한 흐름을 차트로 보시려면 **2단계(정밀) 또는 3단계(심층)**로 이어서 진단하시길 적극 권장합니다.
+            1단계(초간단 진단)는 사용자의 자산 세부 구조(부동산 비율, 주식 여부 등)와 개별 연금 가치를 모른 채 대략적인 평균 비율로 연산하므로, 긴 기간의 연도별 자산 변동 그래프를 제공할 경우 정보 오해 소지가 큽니다. 보다 정확한 흐름을 차트로 보시려면 <strong>2단계(정밀) 또는 3단계(심층)</strong>로 이어서 진단하시길 적극 권장합니다.
           </div>
         </div>
+
+        <!-- FAQ 5 -->
+        <div class="faq-item">
+          <div class="faq-question">
+            <span>Q5. 단계를 올리면 처음부터 다시 입력해야 하나요?</span>
+            <span class="faq-icon">+</span>
+          </div>
+          <div class="faq-answer">
+            아닙니다. 1단계에서 입력한 나이·자산·소득·지출 정보는 2단계로 이어갈 때 자동으로 이어받아 채워집니다. 2단계에서 추가한 자산 분류·항목별 소득/지출 정보도 3단계로 이어갈 때 그대로 유지됩니다. 처음부터 다시 시작하지 않아도 되니 부담 없이 단계를 올려 더 정밀하게 진단해 보세요.
+          </div>
+        </div>
+
+        <!-- FAQ 6 -->
+        <div class="faq-item">
+          <div class="faq-question">
+            <span>Q6. 국민연금도 월 소득으로 입력해야 하나요?</span>
+            <span class="faq-icon">+</span>
+          </div>
+          <div class="faq-answer">
+            네, 반드시 포함해 주세요. 국민연금은 물가상승률에 연동되어 매년 조금씩 오르는 가장 안정적인 은퇴 소득입니다. 2단계부터는 소득 항목별로 <strong>물가 연동 여부(📈 토글)</strong>를 따로 지정할 수 있으니, 국민연금 항목에 연동을 켜두시면 더욱 현실적인 결과를 얻을 수 있습니다.
+          </div>
+        </div>
+
+        <!-- FAQ 7 -->
+        <div class="faq-item">
+          <div class="faq-question">
+            <span>Q7. 시뮬레이션 결과를 저장하거나 공유할 수 있나요?</span>
+            <span class="faq-icon">+</span>
+          </div>
+          <div class="faq-answer">
+            입력한 데이터는 사용 중인 기기의 브라우저에 자동 저장되므로, 앱을 닫고 다시 열어도 <strong>이어서 하기</strong> 기능으로 결과를 다시 볼 수 있습니다. 다른 기기나 배우자와 공유하려면 해당 기기의 브라우저에서 처음부터 동일하게 입력하셔야 합니다. PDF 내보내기 기능은 현재 개발 중입니다.
+          </div>
+        </div>
+
+        <!-- FAQ 8 -->
+        <div class="faq-item">
+          <div class="faq-question">
+            <span>Q8. 물가상승률을 몇 %로 설정하는 게 좋을까요?</span>
+            <span class="faq-icon">+</span>
+          </div>
+          <div class="faq-answer">
+            한국은행의 공식 물가안정목표는 <strong>연 2.0%</strong>입니다. 보수적으로 판단하고 싶다면 2.5~3.0%를 권장합니다. 최근 5년 평균 소비자물가 상승률이 3%를 넘는 해도 있었으므로, '안심 시나리오'는 2.0%, '위험 시나리오'는 3.0~3.5%로 두 번 비교해 보시는 것이 가장 좋습니다.
+          </div>
+        </div>
+
+        <!-- FAQ 9 -->
+        <div class="faq-item">
+          <div class="faq-question">
+            <span>Q9. 배우자와 나이 차이가 많이 나는데 어떻게 입력해야 하나요?</span>
+            <span class="faq-icon">+</span>
+          </div>
+          <div class="faq-answer">
+            1단계 입력 시 <strong>본인 나이</strong>와 <strong>배우자 나이</strong>를 각각 입력하시면 됩니다. 시뮬레이터는 두 분 중 더 오래 생존하는 쪽을 기준으로 자산 고갈 시점을 계산하므로, 나이 차이가 큰 경우에도 올바른 결과를 제공합니다. 안전 기준 나이도 배우자가 더 젊다면 조금 더 높게(예: 100세 이상) 설정해 두시길 권장합니다.
+          </div>
+        </div>
+
+        <!-- FAQ 10 -->
+        <div class="faq-item">
+          <div class="faq-question">
+            <span>Q10. 안전 기준 나이와 금액을 어떻게 정해야 할까요?</span>
+            <span class="faq-icon">+</span>
+          </div>
+          <div class="faq-answer">
+            <strong>안전 기준 나이</strong>는 "이 나이까지는 자산이 남아있어야 마음이 편하다"는 심리적 기준선입니다. 통계청 기준 한국 남성 기대수명 83세, 여성 87세를 감안하면 95~100세로 설정하는 것이 보수적으로 안전합니다. <strong>안전 기준 금액</strong>은 '지금 기준으로 그 나이에 최소 이 정도는 남아있어야 안심된다'는 금액입니다. 예상 의료비·간병비를 감안해 최소 3~5억 원을 추천드립니다.
+          </div>
+        </div>
+
       </div>
     </div>
   </section>
@@ -254,9 +334,9 @@
       <div class="footer-top">
         <div class="footer-logo">🦉 SOMEMORE</div>
         <div class="footer-links">
-          <a href="#levels">단계별 비교</a>
-          <a href="#trust">신뢰성 기준</a>
-          <a href="#faq">FAQ</a>
+          <a href="#levels" class="scroll-link">단계별 비교</a>
+          <a href="#trust" class="scroll-link">신뢰성 기준</a>
+          <a href="#faq" class="scroll-link">FAQ</a>
         </div>
       </div>
       <div class="footer-info">
@@ -269,75 +349,69 @@
     </div>
   </footer>
 
-  <!-- FAQ Accordion JS -->
   <script>
-    document.querySelectorAll('.faq-question').forEach(question => {
-      question.addEventListener('click', () => {
-        const item = question.parentElement;
-        const isActive = item.classList.contains('active');
-        
-        // Close all items
-        document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('active'));
-        
-        // Toggle current item
-        if (!isActive) {
-          item.classList.add('active');
+    // ── 앵커 스크롤 (iframe 내부에서도 작동) ──
+    document.querySelectorAll('.scroll-link').forEach(link => {
+      link.addEventListener('click', function(e) {
+        const href = this.getAttribute('href');
+        if (href && href.startsWith('#')) {
+          e.preventDefault();
+          const target = document.querySelector(href);
+          if (target) {
+            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
         }
       });
     });
 
-    // Custom Toast Alert for Inactive Items
+    // ── FAQ 아코디언 ──
+    document.querySelectorAll('.faq-question').forEach(question => {
+      question.addEventListener('click', () => {
+        const item = question.parentElement;
+        const isActive = item.classList.contains('active');
+        document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('active'));
+        if (!isActive) item.classList.add('active');
+      });
+    });
+
+    // ── Toast 알림 ──
     function showToast(message) {
       let toast = document.getElementById('customToast');
       if (!toast) {
         toast = document.createElement('div');
         toast.id = 'customToast';
-        toast.style.position = 'fixed';
-        toast.style.bottom = '24px';
-        toast.style.left = '50%';
-        toast.style.transform = 'translateX(-50%) translateY(100px)';
-        toast.style.background = 'rgba(26, 32, 40, 0.95)';
-        toast.style.border = '1px solid #d4a857'; // Gold
-        toast.style.color = '#e8ecef'; // Ink
-        toast.style.padding = '12px 24px';
-        toast.style.borderRadius = '30px';
-        toast.style.fontSize = '15px';
-        toast.style.fontWeight = '500';
-        toast.style.zIndex = '9999';
-        toast.style.boxShadow = '0 8px 32px rgba(0, 0, 0, 0.5)';
-        toast.style.transition = 'transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s ease';
-        toast.style.opacity = '0';
-        toast.style.pointerEvents = 'none';
-        toast.style.display = 'flex';
-        toast.style.alignItems = 'center';
-        toast.style.gap = '8px';
-        toast.innerHTML = `<span>🦉</span><span id="toastMsg"></span>`;
+        Object.assign(toast.style, {
+          position: 'fixed', bottom: '24px', left: '50%',
+          transform: 'translateX(-50%) translateY(100px)',
+          background: 'rgba(26, 32, 40, 0.95)',
+          border: '1px solid #d4a857', color: '#e8ecef',
+          padding: '12px 24px', borderRadius: '30px',
+          fontSize: '15px', fontWeight: '500', zIndex: '9999',
+          boxShadow: '0 8px 32px rgba(0,0,0,0.5)',
+          transition: 'transform 0.3s cubic-bezier(0.175,0.885,0.32,1.275), opacity 0.3s ease',
+          opacity: '0', pointerEvents: 'none',
+          display: 'flex', alignItems: 'center', gap: '8px'
+        });
+        toast.innerHTML = '<span>🦉</span><span id="toastMsg"></span>';
         document.body.appendChild(toast);
       }
-      
-      const msgEl = document.getElementById('toastMsg');
-      msgEl.innerText = message;
-      
+      document.getElementById('toastMsg').innerText = message;
       toast.style.opacity = '1';
       toast.style.transform = 'translateX(-50%) translateY(0)';
-      
-      clearTimeout(toast.timeoutId);
-      toast.timeoutId = setTimeout(() => {
+      clearTimeout(toast._tid);
+      toast._tid = setTimeout(() => {
         toast.style.opacity = '0';
         toast.style.transform = 'translateX(-50%) translateY(100px)';
       }, 2500);
     }
 
-    document.getElementById('cartLink').addEventListener('click', (e) => {
+    document.getElementById('cartLink').addEventListener('click', e => {
       e.preventDefault();
       showToast('장바구니 서비스 준비 중입니다! 🦉');
     });
-
     document.getElementById('profileBtn').addEventListener('click', () => {
       showToast('마이페이지 서비스 준비 중입니다! 🦉');
     });
-
-
   </script>
 </body>
 </html>
