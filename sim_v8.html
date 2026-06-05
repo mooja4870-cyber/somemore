@@ -2195,7 +2195,7 @@ async function renderResult() {
   const effectiveDebt = state.resultLevel === 1 ? (state.totalDebt || 0) : (state.debt_total || 0);
   const debtNote = effectiveDebt > 0
     ? `<div class="footnote" style="margin-bottom: 20px; padding: 14px 16px; background: var(--bg-card); border: 1px dashed var(--border); border-radius: 10px; font-size: 15px; color: var(--ink-faint); line-height: 1.6;">
-        💡 대출/빚/전세보증금 ${formatEok(effectiveDebt)}이 총자산에서 차감되어 계산되었어요. <strong>원금 상환은 미반영</strong>(보수적 추정)이며, 월 대출이자는 지출 항목에 포함되어 있는지 확인해 주세요.
+        💡 대출/빚/전세보증금 ${formatEok(effectiveDebt)}을 총자산에서 빼고 <strong>순자산 기준</strong>으로 계산했어요. 원금을 갚는 건 '내 현금이 빚 감소로 옮겨가는 것'이라 순자산에는 변화가 없어, 부채를 고정값으로 두고 단순화했습니다. 다만 매달 내는 <strong>대출이자</strong>는 실제 비용이니 지출 항목에 빠짐없이 넣어주세요.
       </div>`
     : '';
 
