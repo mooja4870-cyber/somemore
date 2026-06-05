@@ -413,11 +413,39 @@
       showToast('마이페이지 서비스 준비 중입니다! 🦉');
     });
 
-    // ── Streamlit iframe 내비게이션: postMessage 브릿지 ──
-    // components.html() 샌드박스에 allow-top-navigation 이 없어
-    // window.parent.location.href / target="_parent" 모두 차단됨.
-    // postMessage 는 샌드박스와 무관하게 부모 프레임으로 전달 가능.
-    // app.py 에 listener 가 등록되어 있어 메시지 수신 시 window.location.href 변경.
+    // ── Streamlit iframe 네비게이션 처리 ──
+    // components.html() 샌드박스: allow-same-origin O, allow-top-navigation X
+    // → window.parent.location.href 직접 할당: 차단됨
+    // → st.markdown(<script>): React DOMPurify가 script 제거 → 실행 안 됨
+    //
+    // 해결: allow-same-origin 권한으로 window.parent.document에 <script> 직접 삽입
+    // 삽입된 스크립트는 부모 window 컨텍스트에서 실행 → window.location.href 자유롭게 변경 가능
+    (function setupParentNav() {
+      try {
+        const p = window.parent;
+        if (!p || p === window) return; // 최상위 창이면 불필요
+
+        // 이미 리스너가 있으면 중복 등록 방지
+        if (p.__somemoreNavReady) return;
+        p.__somemoreNavReady = true;
+
+        // 부모 document에 script 태그 삽입 → 부모 컨텍스트에서 실행됨
+        const s = p.document.createElement('script');
+        s.textContent = `
+          window.addEventListener('message', function(e) {
+            if (e.data && e.data.type === 'somemore_navigate') {
+              window.location.href = e.data.url;
+            }
+          });
+        `;
+        p.document.head.appendChild(s);
+      } catch(err) {
+        // 크로스오리진이거나 접근 불가 환경 — postMessage만으로 폴백
+        console.warn('[somemore] parent script injection blocked:', err.message);
+      }
+    })();
+
+    // target="_parent" 링크 → postMessage 전송
     document.querySelectorAll('a[target="_parent"]').forEach(link => {
       link.addEventListener('click', function(e) {
         e.preventDefault();

@@ -2,6 +2,35 @@
 
 ---
 
+## v18 — 2026-06-05
+
+**시뮬레이터 시작 버튼 정밀 진단 및 근본 수정 — 부모 document 스크립트 직접 삽입.**
+
+### 근본 원인 분석
+| 시도 | 방법 | 실패 이유 |
+|------|------|-----------|
+| v10 | `srcdoc` + `allow-top-navigation` | `st.markdown`이 `srcdoc` 속성 내용 이중 이스케이프 → 화면 깨짐 |
+| v12 | `components.html()` + `target="_parent"` | `components.html()` sandbox에 `allow-top-navigation` 없음 → 차단 |
+| v17 | `st.markdown(<script>)` + postMessage | React `DOMPurify`가 `<script>` 태그 제거 → 리스너 등록 자체 실패 |
+
+### 해결책
+`components.html()` iframe은 `allow-same-origin` 권한을 가짐  
+→ `window.parent.document.createElement('script')`로 부모 페이지에 스크립트 직접 삽입 가능  
+→ 삽입된 스크립트는 **부모 window 컨텍스트에서 실행** → `window.location.href` 제약 없음
+
+### 변경 사항
+- **`index.html`**: `setupParentNav()` 함수 추가
+  - `window.parent.document.head`에 `<script>` 삽입 (중복 방지: `p.__somemoreNavReady` 플래그)
+  - 크로스오리진 차단 시 `try/catch`로 안전하게 폴백
+  - postMessage 발신부는 유지 (리스너 삽입 성공 시 수신)
+- **`app.py`**: 작동하지 않던 `st.markdown(<script>)` 리스너 제거 (코드 정리)
+
+### 변경 통계
+- `index.html`: +24 / −10 lines
+- `app.py`: −12 lines
+
+---
+
 ## v17 — 2026-06-05
 
 **시뮬레이터 시작 버튼 작동 수정 — postMessage 브릿지 방식으로 전환.**
