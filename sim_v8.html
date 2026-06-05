@@ -2191,6 +2191,25 @@ async function renderResult() {
       </div>`
     : '';
 
+  // "왜 자산이 늘어날까요?" 설명 박스 — 미래 자산이 현재보다 늘어난 경우에만 표시
+  const startAsset = data.totals[0] || 0;
+  const grew = assetAtSafety > startAsset;
+  let growthNote = '';
+  if (grew) {
+    if (state.resultLevel === 1) {
+      // 1단계: 수익률을 사용자가 직접 입력하지 않으므로 '가정'임을 명시
+      growthNote = `<div class="footnote" style="margin-bottom: 20px; padding: 16px 18px; background: var(--gold-soft); border: 1px solid rgba(212, 168, 87, 0.25); border-radius: 12px; font-size: 16px; color: var(--ink-dim); line-height: 1.7;">
+        💬 <strong style="color: var(--gold-bright);">"가만히 둬도 왜 늘죠?"</strong> 🦉<br>
+        집·투자 같은 자산이 매년 조금씩(부동산 <strong>${state.reGrowth}%</strong>, 현금·투자 <strong>${state.cashReturn}%</strong>) 불어난다고 <strong>가정</strong>했기 때문이에요. 마치 눈덩이가 굴러가며 커지듯 자산이 스스로 자라납니다. 들어오는 돈(연금·수익)이 나가는 생활비보다 많으면 그 차이도 차곡차곡 쌓이고요. 단, 미래 금액이 큰 건 물가가 오른 만큼 부풀려진 숫자라, 오늘 돈으로 환산해 비교해요.
+      </div>`;
+    } else {
+      growthNote = `<div class="footnote" style="margin-bottom: 20px; padding: 16px 18px; background: var(--gold-soft); border: 1px solid rgba(212, 168, 87, 0.25); border-radius: 12px; font-size: 16px; color: var(--ink-dim); line-height: 1.7;">
+        💬 <strong style="color: var(--gold-bright);">"가만히 둬도 왜 늘죠?"</strong> 🦉<br>
+        집값이 매년 조금씩(<strong>${state.reGrowth}%</strong>) 오르고, 통장·투자금도 이자처럼(<strong>${state.cashReturn}%</strong>) 불어나기 때문이에요. 마치 눈덩이가 굴러가며 커지듯 자산이 스스로 자라납니다. 들어오는 돈(연금·수익)이 나가는 생활비보다 많으면 그 차이도 차곡차곡 쌓이고요. 단, 미래 금액이 큰 건 물가가 오른 만큼 부풀려진 숫자라, 오늘 돈으로 환산해 비교해요.
+      </div>`;
+    }
+  }
+
   // 대출 원금 미반영 주석 (부채 있을 때) — 1단계는 totalDebt, 2단계 이상은 debt_total 참조
   const effectiveDebt = state.resultLevel === 1 ? (state.totalDebt || 0) : (state.debt_total || 0);
   const debtNote = effectiveDebt > 0
@@ -2211,6 +2230,7 @@ async function renderResult() {
       <div class="verdict-headline">${verdictHeadline}</div>
       <div class="verdict-detail">${verdictDetail}</div>
     </div>
+    ${growthNote}
     <div class="metric-grid">
       <div class="metric">
         <div class="metric-label">현재 총자산</div>
