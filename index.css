@@ -34,6 +34,9 @@
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+  /* 한 단어(어절)가 두 줄에 걸쳐 쪼개지지 않도록 — 공백 단위로만 줄바꿈 */
+  word-break: keep-all;
+  overflow-wrap: break-word;
 }
 
 body {
