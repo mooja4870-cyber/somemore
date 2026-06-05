@@ -80,6 +80,21 @@ else:
     html_content = html_content.replace('href="sim_v8.html"', 'href="/?page=sim"')
     html_content = html_content.replace('href="index.html"', 'href="/"')
 
-# ✅ st.markdown + srcdoc 방식 대신 components.html 직접 주입
-# → HTML 이스케이프 없이 브라우저가 바로 렌더링 (깨짐 완전 방지)
+# ── postMessage 브릿지: iframe 내부 네비게이션 이벤트를 부모(Streamlit)가 수신해 URL 이동 ──
+# components.html() 샌드박스에 allow-top-navigation 이 없으므로
+# window.parent.location.href 직접 할당은 차단됨.
+# postMessage 는 샌드박스 제한 없이 전달되므로 부모 프레임에서 직접 location.href 변경.
+st.markdown("""
+<script>
+(function() {
+  window.addEventListener('message', function(e) {
+    if (e.data && e.data.type === 'somemore_navigate') {
+      window.location.href = e.data.url;
+    }
+  }, false);
+})();
+</script>
+""", unsafe_allow_html=True)
+
+# ✅ components.html 직접 주입 (HTML 이스케이프 없이 브라우저가 바로 렌더링)
 components.html(html_content, height=900, scrolling=True)

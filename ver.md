@@ -2,6 +2,31 @@
 
 ---
 
+## v17 — 2026-06-05
+
+**시뮬레이터 시작 버튼 작동 수정 — postMessage 브릿지 방식으로 전환.**
+
+### 문제
+- `components.html()` 샌드박스에 `allow-top-navigation` 미포함
+- 브라우저가 `window.parent.location.href` 직접 할당과 `target="_parent"` 링크 모두 차단
+- 결과: "시뮬레이터 시작", "1~3단계 무료 시작하기" 버튼 클릭 시 무반응
+
+### 변경 사항
+- **`app.py`**: `st.markdown`으로 부모 프레임에 `postMessage` listener JS 주입
+  - `message` 이벤트에서 `type === 'somemore_navigate'` 수신 시 `window.location.href` 변경
+- **`index.html`**: `target="_parent"` 링크 클릭 핸들러 교체
+  - `window.parent.location.href` (차단) → `window.parent.postMessage({type:'somemore_navigate', url}, '*')` (샌드박스 무관하게 작동)
+
+### 원리
+- `postMessage`는 sandbox의 `allow-top-navigation` 없이도 부모 프레임으로 메시지 전달 가능
+- 부모 Streamlit 프레임이 메시지를 받아 직접 `window.location.href` 변경 → Streamlit 쿼리파람 라우팅 작동
+
+### 변경 통계
+- `app.py`: +14 / −3 lines
+- `index.html`: +6 / −8 lines
+
+---
+
 ## v16 — 2026-06-05
 
 **랜딩 페이지 히어로 섹션에 Android APK 다운로드 버튼 추가.**
