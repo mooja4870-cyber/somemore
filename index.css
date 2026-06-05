@@ -215,20 +215,6 @@ a {
   box-shadow: 0 12px 32px rgba(99, 102, 241, 0.45);
 }
 
-.btn-apk {
-  background: var(--green-soft);
-  border: 1px solid rgba(16, 185, 129, 0.3);
-  color: var(--green);
-}
-
-.btn-apk:hover {
-  background: var(--green);
-  border-color: var(--green);
-  color: var(--bg);
-  transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(16, 185, 129, 0.3);
-}
-
 .btn-secondary {
   background: var(--bg-card);
   border: 1px solid var(--border);

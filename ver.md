@@ -2,6 +2,20 @@
 
 ---
 
+## v20 — 2026-06-05
+
+**Android APK 다운로드 버튼 삭제 (v16 기능 제거).**
+
+### 변경 사항
+- `index.html` 히어로 섹션의 "📱 앱 다운로드 (Android)" 버튼 제거
+- `index.css` `.btn-apk` 스타일 제거
+
+### 변경 통계
+- `index.html`: −6 lines
+- `index.css`: −13 lines
+
+---
+
 ## v19 — 2026-06-05
 
 **시뮬레이터 SOMEMORE 로고 클릭 시 홈으로 이동 — sim_v8.html에 동일 네비게이션 처리 추가.**
