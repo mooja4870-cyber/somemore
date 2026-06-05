@@ -2880,6 +2880,39 @@ async function renderResumePrompt(saved) {
 }
 
 bootstrap();
+
+// ── Streamlit iframe 네비게이션: 부모 document에 리스너 스크립트 직접 삽입 ──
+// components.html() 샌드박스: allow-same-origin O, allow-top-navigation X
+// → st.markdown(<script>) 는 DOMPurify에 의해 제거됨 → 사용 불가
+// → allow-same-origin 으로 window.parent.document 접근 가능 → 부모 컨텍스트에서 실행
+(function setupParentNav() {
+  try {
+    const p = window.parent;
+    if (!p || p === window) return;
+    if (p.__somemoreNavReady) return;
+    p.__somemoreNavReady = true;
+    const s = p.document.createElement('script');
+    s.textContent = `
+      window.addEventListener('message', function(e) {
+        if (e.data && e.data.type === 'somemore_navigate') {
+          window.location.href = e.data.url;
+        }
+      });
+    `;
+    p.document.head.appendChild(s);
+  } catch(err) {
+    console.warn('[somemore] parent script injection blocked:', err.message);
+  }
+})();
+
+// target="_parent" 링크 → postMessage 전송 (SOMEMORE 로고 등)
+document.querySelectorAll('a[target="_parent"]').forEach(function(link) {
+  link.addEventListener('click', function(e) {
+    e.preventDefault();
+    const url = this.getAttribute('href');
+    window.parent.postMessage({ type: 'somemore_navigate', url: url }, '*');
+  });
+});
 </script>
 </body>
 </html>

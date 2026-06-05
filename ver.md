@@ -2,6 +2,25 @@
 
 ---
 
+## v19 — 2026-06-05
+
+**시뮬레이터 SOMEMORE 로고 클릭 시 홈으로 이동 — sim_v8.html에 동일 네비게이션 처리 추가.**
+
+### 문제
+- `sim_v8.html` 상단 navbar의 SOMEMORE 로고(`<a href="index.html" target="_parent">`)가 동작 안 함
+- `app.py`에서 `href="index.html"` → `href="/"` 교체는 되어 있었지만 네비게이션 JS 없었음
+
+### 변경 사항 (sim_v8.html)
+- `setupParentNav()` 함수 추가 — v18의 index.html과 동일한 방식
+  - `window.parent.document.head`에 `<script>` 삽입 (부모 컨텍스트 실행)
+  - `__somemoreNavReady` 플래그로 중복 등록 방지
+- `target="_parent"` 링크 클릭 → `postMessage({type:'somemore_navigate', url})` 전송
+
+### 변경 통계
+- `sim_v8.html`: +22 / −0 lines
+
+---
+
 ## v18 — 2026-06-05
 
 **시뮬레이터 시작 버튼 정밀 진단 및 근본 수정 — 부모 document 스크립트 직접 삽입.**
