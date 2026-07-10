@@ -2,6 +2,19 @@
 
 ---
 
+## v24.1.1 — 2026-07-10
+
+**Cloudflare 배포 환경에서의 홈 로고 링크 이동 오류 수정**
+
+### 변경 내용
+* `index.html` 및 `sim_v8.html`에서 iframe 외부(정적 웹) 환경일 때 로고 링크 클릭 시 정상적으로 홈 화면으로 이동하도록 `target="_parent"` 클릭 가로채기 로직 수정. (iframe 내부일 때만 postMessage를 보내도록 변경)
+
+### 수정 파일
+* `index.html`
+* `sim_v8.html`
+
+---
+
 ## v24.1.0 — 2026-07-10
 
 **문서 및 디자인 자료 추가, Cloudflare 배포 준비**

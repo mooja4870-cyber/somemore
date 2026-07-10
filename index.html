@@ -439,12 +439,14 @@
       }
     })();
 
-    // target="_parent" 링크 → postMessage 전송
+    // target="_parent" 링크 → postMessage 전송 (iframe 내부에서만)
     document.querySelectorAll('a[target="_parent"]').forEach(link => {
       link.addEventListener('click', function(e) {
-        e.preventDefault();
-        const url = this.getAttribute('href');
-        window.parent.postMessage({ type: 'somemore_navigate', url: url }, '*');
+        if (window.parent !== window) {
+          e.preventDefault();
+          const url = this.getAttribute('href');
+          window.parent.postMessage({ type: 'somemore_navigate', url: url }, '*');
+        }
       });
     });
   </script>
